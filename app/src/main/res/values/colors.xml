@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_green">#1b4332</color>
     <color name="darkgreen">#1b4332</color>
+    <color name="primary_blue">#2B5C92</color>
+    <color name="accent_blue">#1E88E5</color>
+    <color name="primary_light">#B3CDE0</color>
+    <color name="text_body">#1F2937</color>
+    <color name="status_success">#2E9E5B</color>
+    <color name="status_warning">#F59E0B</color>
+    <color name="primary_navy">#0C1446</color>
+
 </resources>

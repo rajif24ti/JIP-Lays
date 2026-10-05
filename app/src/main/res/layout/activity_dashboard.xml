@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F7FA">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:background="@drawable/bg_toolbar_gradient">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Beranda MBG Kitchen"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivProfile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_avatar"
+            android:padding="7dp"
+            android:src="@drawable/ic_person"
+            android:contentDescription="Profil"
+            app:tint="@color/primary_blue" />
+
+    </LinearLayout>
+
+    <!-- CONTENT -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="13dp">
+
+            <!-- GREETING -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_18pt_regular"
+                        android:text="Selamat datang,"
+                        android:textColor="@color/text_body"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tvNamaUser"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="Budi Santoso"
+                        android:textColor="@color/primary_navy"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvRole"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/inter_18pt_regular"
+                        android:text="Penanggung Jawab Dapur"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="8sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_avatar"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="BS"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+            <!-- RINGKASAN -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="17dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Ringkasan Hari Ini"
+                android:textColor="@color/primary_navy"
+                android:textSize="12sp" />
+
+            <!-- ROW 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardProduksi"
+                    android:layout_width="0dp"
+                    android:layout_height="68dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#E5EAF0"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="9dp">
+
+                        <TextView
+                            android:text="Produksi Hari Ini"
+                            android:textColor="@color/text_body"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:id="@+id/tvProduksi"
+                            android:text="12 batch"
+                            android:textColor="@color/primary_navy"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardKaryawan"
+                    android:layout_width="0dp"
+                    android:layout_height="68dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#E5EAF0"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="9dp">
+
+                        <TextView
+                            android:text="Karyawan Hadir"
+                            android:textColor="@color/text_body"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="28/30"
+                            android:textColor="@color/primary_navy"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- ROW 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="68dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#E5EAF0"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="9dp">
+
+                        <TextView
+                            android:text="Sekolah Penerima"
+                            android:textColor="@color/text_body"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="8"
+                            android:textColor="@color/primary_navy"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="68dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#E5EAF0"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="9dp">
+
+                        <TextView
+                            android:text="Total Porsi"
+                            android:textColor="@color/text_body"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="2.480"
+                            android:textColor="@color/primary_navy"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- AKTIVITAS -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="17dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Aktivitas Terbaru"
+                android:textColor="@color/primary_navy"
+                android:textSize="12sp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp"
+                app:strokeColor="#E5EAF0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="9dp">
+
+                    <TextView
+                        android:text="Selesai masak Batch 4"
+                        android:textColor="@color/text_body"
+                        android:textSize="9sp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:text="320 porsi Nasi Ayam Teriyaki"
+                        android:textColor="#7A8795"
+                        android:textSize="8sp"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/inter_18pt_regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:background="#EEF1F4" />
+
+                    <TextView
+                        android:text="Absensi Masuk: Siti Rahayu"
+                        android:textColor="@color/text_body"
+                        android:textSize="9sp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:text="Posisi: Juru Masak"
+                        android:textColor="#7A8795"
+                        android:textSize="8sp"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/inter_18pt_regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginBottom="7dp"
+                        android:background="#EEF1F4" />
+
+                    <TextView
+                        android:text="Kotak Saran Baru Masuk"
+                        android:textColor="@color/text_body"
+                        android:textSize="9sp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:text="Masukan dari SDN Sukamaju 02"
+                        android:textColor="#7A8795"
+                        android:textSize="8sp"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/inter_18pt_regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- MENU CEPAT -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="17dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Menu"
+                android:textColor="@color/primary_navy"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardAbsensi"
+                    android:layout_width="0dp"
+                    android:layout_height="72dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#E5EAF0"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_karyawan"
+                            app:tint="@color/primary_blue" />
+
+                        <TextView
+                            android:text="Absensi"
+                            android:textColor="@color/text_body"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardGizi"
+                    android:layout_width="0dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="#E5EAF0"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_gizi"
+                            app:tint="@color/primary_blue" />
+
+                        <TextView
+                            android:text="Gizi"
+                            android:textColor="@color/text_body"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:layout_marginTop="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- BOTTOM NAVIGATION -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_home"
+                app:tint="@color/primary_blue" />
+
+            <TextView
+                android:text="Beranda"
+                android:textColor="@color/primary_blue"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navKaryawan"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_karyawan"
+                app:tint="#8A96A3" />
+
+            <TextView
+                android:text="Karyawan"
+                android:textColor="#8A96A3"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navProduksi"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_gizi"
+                app:tint="#8A96A3" />
+
+            <TextView
+                android:text="Gizi"
+                android:textColor="#8A96A3"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/navProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_person"
+                app:tint="#8A96A3" />
+
+            <TextView
+                android:text="Profil"
+                android:textColor="#8A96A3"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

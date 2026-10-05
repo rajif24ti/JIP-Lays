@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F7FA">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="15dp"
+        android:background="@drawable/bg_toolbar_gradient">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Kembali"
+            app:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Absensi Karyawan"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- TANGGAL -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <TextView
+            android:id="@+id/tvTanggal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Kamis, 24 Okt 2024"
+            android:textColor="@color/text_body"
+            android:textSize="9sp" />
+
+    </LinearLayout>
+
+    <!-- TAB -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="12dp"
+        android:orientation="horizontal"
+        android:background="#E6EBF0">
+
+        <TextView
+            android:id="@+id/tabMasuk"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@color/primary_blue"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Masuk"
+            android:textColor="@color/white"
+            android:textSize="9sp" />
+
+        <TextView
+            android:id="@+id/tabPulang"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Pulang"
+            android:textColor="#7A8795"
+            android:textSize="9sp" />
+
+    </LinearLayout>
+
+    <!-- LIST -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- SITI -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginBottom="7dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp"
+                app:strokeColor="#E5EAF0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="9dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="SR"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="9sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:text="Siti Rahayu"
+                            android:textColor="@color/text_body"
+                            android:textSize="10sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Juru Masak"
+                            android:textColor="#8A96A3"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:text="Hadir"
+                        android:textColor="@color/status_success"
+                        android:textSize="8sp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- AHMAD -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginBottom="7dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp"
+                app:strokeColor="#E5EAF0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="9dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="AH"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="9sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:text="Ahmad Hidayat"
+                            android:textColor="@color/text_body"
+                            android:textSize="10sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Asisten Masak"
+                            android:textColor="#8A96A3"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:text="Hadir"
+                        android:textColor="@color/status_success"
+                        android:textSize="8sp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- DEWI -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginBottom="7dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp"
+                app:strokeColor="#E5EAF0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="9dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="DL"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="9sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:text="Dewi Lestari"
+                            android:textColor="@color/text_body"
+                            android:textSize="10sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Packaging"
+                            android:textColor="#8A96A3"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:text="Terlambat"
+                        android:textColor="@color/status_warning"
+                        android:textSize="8sp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- BAMBANG -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginBottom="7dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp"
+                app:strokeColor="#E5EAF0"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="9dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_avatar"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="BS"
+                        android:textColor="@color/primary_blue"
+                        android:textSize="9sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:text="Bambang S."
+                            android:textColor="@color/text_body"
+                            android:textSize="10sp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <TextView
+                            android:text="Driver"
+                            android:textColor="#8A96A3"
+                            android:textSize="8sp"
+                            android:fontFamily="@font/inter_18pt_regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:text="Belum Absen"
+                        android:textColor="#8A96A3"
+                        android:textSize="8sp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- TAMBAH -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSimpan"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/bg_button_gradient"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="+ Tambah Absensi"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="9sp"
+        app:backgroundTint="@null"
+        app:cornerRadius="20dp" />
+
+    <!-- BOTTOM NAV -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_home"
+                app:tint="#8A96A3" />
+
+            <TextView
+                android:text="Beranda"
+                android:textColor="#8A96A3"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_karyawan"
+                app:tint="@color/primary_blue" />
+
+            <TextView
+                android:text="Data"
+                android:textColor="@color/primary_blue"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_dashboard"
+                app:tint="#8A96A3" />
+
+            <TextView
+                android:text="Laporan"
+                android:textColor="#8A96A3"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_person"
+                app:tint="#8A96A3" />
+
+            <TextView
+                android:text="Profil"
+                android:textColor="#8A96A3"
+                android:textSize="8sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
