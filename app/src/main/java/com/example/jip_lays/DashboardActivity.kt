@@ -2,6 +2,7 @@ package com.example.jip_lays
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.jip_lays.databinding.ActivityDashboardBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -16,78 +17,101 @@ class DashboardActivity : AppCompatActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Ambil data dari Login
-        val username = intent.getStringExtra("username")
-        val role = intent.getStringExtra("role")
+        // Ambil username dan role dari LoginActivity
+        val username = intent.getStringExtra("username") ?: "Pengguna"
+        val role = intent.getStringExtra("role") ?: "Pengguna SIMOD MBG"
 
-        if (!username.isNullOrEmpty()) {
-            binding.tvNamaUser.text = username
+        binding.tvWelcome.text = role
+
+        // Tombol logout
+        binding.btnLogout.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Konfirmasi Logout")
+                .setMessage("Apakah Anda yakin ingin keluar dari akun?")
+                .setNegativeButton("Tidak", null)
+                .setPositiveButton("Ya") { dialog, _ ->
+
+                    // Hapus sesi login
+                    val sharedPref =
+                        getSharedPreferences("user_pref", MODE_PRIVATE)
+
+                    sharedPref.edit()
+                        .clear()
+                        .apply()
+
+                    dialog.dismiss()
+
+                    // Kembali ke LoginActivity
+                    val logoutIntent = Intent(
+                        this,
+                        LoginActivity::class.java
+                    )
+
+                    logoutIntent.flags =
+                        Intent.FLAG_ACTIVITY_NEW_TASK or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                    startActivity(logoutIntent)
+                    finish()
+                }
+                .show()
         }
 
-        if (!role.isNullOrEmpty()) {
-            binding.tvRole.text = role
-        }
-
-        // Menu Absensi
+        // Menu cepat: Absensi
         binding.cardAbsensi.setOnClickListener {
             startActivity(
-                Intent(
-                    this,
-                    AbsensiActivity::class.java
-                )
+                Intent(this, AbsensiActivity::class.java)
             )
         }
 
-        // Menu Produksi
-        binding.cardProduksi.setOnClickListener {
-            // Halaman produksi dapat ditambahkan nanti
-        }
-
-        // Menu Karyawan
-        binding.cardKaryawan.setOnClickListener {
-            startActivity(
-                Intent(
-                    this,
-                    AbsensiActivity::class.java
-                )
-            )
-        }
-
-        // Menu Gizi
+        // Menu cepat: Gizi
         binding.cardGizi.setOnClickListener {
-            // Halaman gizi dapat ditambahkan nanti
+            Toast.makeText(
+                this,
+                "Menu Gizi dipilih",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        // Tombol profil / logout
-        binding.navProfile.setOnClickListener {
-            tampilkanDialogLogout()
-        }
-    }
+        // Navigasi bawah
+        binding.bottomNavigation.selectedItemId = R.id.menu_home
 
-    private fun tampilkanDialogLogout() {
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
 
-        MaterialAlertDialogBuilder(this)
-            .setTitle("Keluar dari Dashboard?")
-            .setMessage(
-                "Apakah Anda yakin ingin keluar dari akun?"
-            )
-            .setNegativeButton("Batal", null)
-            .setPositiveButton("Keluar") { _, _ ->
+                R.id.menu_home -> {
+                    true
+                }
 
-                val intent = Intent(
-                    this,
-                    LoginActivity::class.java
-                )
+                R.id.menu_karyawan -> {
+                    startActivity(
+                        Intent(this, AbsensiActivity::class.java)
+                    )
+                    true
+                }
 
-                // Menghapus halaman Dashboard dari stack
-                intent.flags =
-                    Intent.FLAG_ACTIVITY_NEW_TASK or
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK
+                R.id.menu_produksi -> {
+                    Toast.makeText(
+                        this,
+                        "Menu Gizi dipilih",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    true
+                }
 
-                startActivity(intent)
+                R.id.menu_profile -> {
+                    val profileIntent = Intent(
+                        this,
+                        ProfileActivity::class.java
+                    )
+                    profileIntent.putExtra("username", username)
+                    profileIntent.putExtra("role", role)
+                    startActivity(profileIntent)
+                    true
+                }
 
-                finish()
+                else -> false
             }
-            .show()
+        }
     }
 }

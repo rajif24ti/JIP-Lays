@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F6FA">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/tvProfileHeader"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="@color/primary_navy"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:text="Profil Developer"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:fontFamily="@font/montserrat_bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Konten profil -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/tvProfileHeader"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Kartu identitas -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/primary_navy"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
+                        android:src="@drawable/ic_person"
+                        android:contentDescription="Foto developer"
+                        android:padding="20dp"
+                        android:background="@drawable/bg_avatar"
+                        android:scaleType="centerInside" />
+
+                    <TextView
+                        android:id="@+id/tvDeveloperName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="M. Rajif Dauta Abimanyu"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:fontFamily="@font/montserrat_bold" />
+
+                    <TextView
+                        android:id="@+id/tvDeveloperRole"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Mahasiswa Teknologi Informasi"
+                        android:textColor="@color/primary_light"
+                        android:textSize="13sp"
+                        android:fontFamily="@font/inter_18pt_regular" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_button_gradient"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="7dp"
+                        android:text="Developer SIMOD MBG"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/montserrat_medium" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Tentang saya -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="Tentang Saya"
+                android:textColor="@color/primary_navy"
+                android:textSize="18sp"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="2dp">
+
+                <TextView
+                    android:id="@+id/tvAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:text="Saya adalah seorang yang suka aktif dalam berkegiatan dikampus maupun di luar kampus, gampang tidur susah bangun, saya juga penggemar fanatik Manchester United, dan pemain badminton yang terkuat saat ini di PCR."
+                    android:textColor="@color/text_body"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/inter_18pt_regular" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Hobi -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Hobi"
+                android:textColor="@color/primary_navy"
+                android:textSize="18sp"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <TextView
+                android:id="@+id/tvHobby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="14dp"
+                android:text="Olahraga, design, dan fotography/videography"
+                android:textColor="@color/text_body"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter_18pt_regular" />
+
+            <!-- Kekuatan terbesar -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Kekuatan Terbesar"
+                android:textColor="@color/primary_navy"
+                android:textSize="18sp"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <TextView
+                android:id="@+id/tvStrength"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="14dp"
+                android:text="Mampu belajar hal baru, mudah beradaptasi, bisa memimpin suatu kelompok, dan memiliki problem solving tersendiri."
+                android:textColor="@color/text_body"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter_18pt_regular" />
+
+            <!-- Media sosial -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Media Sosial"
+                android:textColor="@color/primary_navy"
+                android:textSize="18sp"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <TextView
+                android:id="@+id/tvInstagram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="14dp"
+                android:text="Instagram: @mda_rajif"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter_18pt_regular" />
+
+            <TextView
+                android:id="@+id/tvGithub"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="14dp"
+                android:text="GitHub: github.com/rajif24ti"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter_18pt_regular" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="SIMOD MBG • Developer Profile • v1.0"
+                android:textColor="#8795A8"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Navigasi bawah -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:menu="@menu/bottom_menu"
+        app:labelVisibilityMode="labeled"
+        app:itemIconTint="@color/primary_blue"
+        app:itemTextColor="@color/primary_blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

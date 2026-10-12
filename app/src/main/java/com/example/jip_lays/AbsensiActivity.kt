@@ -3,6 +3,7 @@ package com.example.jip_lays
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.jip_lays.databinding.ActivityAbsensiBinding
 
 class AbsensiActivity : AppCompatActivity() {
@@ -15,14 +16,13 @@ class AbsensiActivity : AppCompatActivity() {
         binding = ActivityAbsensiBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Tombol kembali
+        // Tombol kembali ke halaman sebelumnya
         binding.btnBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
         // Tombol tambah absensi
         binding.btnSimpan.setOnClickListener {
-
             Toast.makeText(
                 this,
                 "Form tambah absensi",
@@ -30,44 +30,65 @@ class AbsensiActivity : AppCompatActivity() {
             ).show()
         }
 
-        // Tab masuk
+        // Kondisi awal: tab Masuk aktif
+        setTabAktif(isMasuk = true)
+
+        // Tab Masuk
         binding.tabMasuk.setOnClickListener {
+            setTabAktif(isMasuk = true)
 
-            binding.tabMasuk.setBackgroundColor(
-                getColor(R.color.primary_blue)
-            )
-
-            binding.tabMasuk.setTextColor(
-                getColor(R.color.white)
-            )
-
-            binding.tabPulang.setBackgroundColor(
-                getColor(android.R.color.transparent)
-            )
-
-            binding.tabPulang.setTextColor(
-                getColor(R.color.text_body)
-            )
+            Toast.makeText(
+                this,
+                "Absensi Masuk dipilih",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        // Tab pulang
+        // Tab Pulang
         binding.tabPulang.setOnClickListener {
+            setTabAktif(isMasuk = false)
+
+            Toast.makeText(
+                this,
+                "Absensi Pulang dipilih",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    // Mengatur tampilan tab yang sedang aktif
+    private fun setTabAktif(isMasuk: Boolean) {
+        val warnaAktif = ContextCompat.getColor(
+            this,
+            R.color.primary_blue
+        )
+
+        val warnaTeks = ContextCompat.getColor(
+            this,
+            R.color.text_body
+        )
+
+        val warnaPutih = ContextCompat.getColor(
+            this,
+            R.color.white
+        )
+
+        if (isMasuk) {
+            binding.tabMasuk.setBackgroundColor(warnaAktif)
+            binding.tabMasuk.setTextColor(warnaPutih)
 
             binding.tabPulang.setBackgroundColor(
-                getColor(R.color.primary_blue)
+                android.graphics.Color.TRANSPARENT
             )
-
-            binding.tabPulang.setTextColor(
-                getColor(R.color.white)
-            )
+            binding.tabPulang.setTextColor(warnaTeks)
+        } else {
+            binding.tabPulang.setBackgroundColor(warnaAktif)
+            binding.tabPulang.setTextColor(warnaPutih)
 
             binding.tabMasuk.setBackgroundColor(
-                getColor(android.R.color.transparent)
+                android.graphics.Color.TRANSPARENT
             )
-
-            binding.tabMasuk.setTextColor(
-                getColor(R.color.text_body)
-            )
+            binding.tabMasuk.setTextColor(warnaTeks)
         }
     }
 }
