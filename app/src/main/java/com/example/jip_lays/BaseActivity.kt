@@ -1,14 +1,9 @@
-
 package com.example.jip_lays
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.jip_lays.databinding.ActivityBaseBinding
-import com.example.jip_lays.fragment.HomeFragment
-import com.example.jip_lays.fragment.KaryawanFragment
-import com.example.jip_lays.fragment.ProduksiFragment
-import com.example.jip_lays.fragment.ProfileFragment
 
 class BaseActivity : AppCompatActivity() {
 
@@ -20,12 +15,15 @@ class BaseActivity : AppCompatActivity() {
         binding = ActivityBaseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Tampilkan Dashboard saat halaman pertama kali dibuka
         if (savedInstanceState == null) {
             replaceFragment(HomeFragment())
         }
 
+        // Navigasi menu bawah
         binding.bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
+
                 R.id.menu_home -> {
                     replaceFragment(HomeFragment())
                     true
@@ -41,6 +39,11 @@ class BaseActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.menu_laporan -> {
+                    replaceFragment(LaporanFragment())
+                    true
+                }
+
                 R.id.menu_profile -> {
                     replaceFragment(ProfileFragment())
                     true
@@ -50,9 +53,11 @@ class BaseActivity : AppCompatActivity() {
             }
         }
 
+        // Menu Dashboard aktif saat aplikasi dibuka
         binding.bottomNavView.selectedItemId = R.id.menu_home
     }
 
+    // Mengganti fragment pada container utama
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(binding.fragmentContainer.id, fragment)

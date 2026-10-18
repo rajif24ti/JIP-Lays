@@ -1,3 +1,4 @@
+
 package com.example.jip_lays
 
 import android.content.Intent
@@ -24,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
             MODE_PRIVATE
         )
 
-        // Pilihan role
+        // Pilihan role pengguna
         val roles = arrayOf(
             "Penanggung Jawab Dapur",
             "Ahli Gizi",
@@ -70,7 +71,6 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Autentikasi sesuai ketentuan Modul Pertemuan 6
             if (username == password) {
 
                 // Simpan status login dan data pengguna
@@ -80,10 +80,16 @@ class LoginActivity : AppCompatActivity() {
                     .putString("role", role)
                     .apply()
 
-                // Pindah ke DashboardActivity
+                Toast.makeText(
+                    this,
+                    "Login berhasil",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                // Arahkan ke BaseActivity yang memiliki Bottom Navigation
                 val intent = Intent(
                     this,
-                    DashboardActivity::class.java
+                    BaseActivity::class.java
                 )
 
                 intent.putExtra("username", username)

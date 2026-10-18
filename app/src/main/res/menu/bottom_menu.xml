@@ -14,8 +14,12 @@
 
     <item
         android:id="@+id/menu_produksi"
-        android:icon="@drawable/ic_dashboard"
+        android:icon="@drawable/ic_gizi"
         android:title="Produksi" />
+    <item
+        android:id="@+id/menu_laporan"
+        android:icon="@drawable/ic_laporan"
+        android:title="Laporan" />
 
     <item
         android:id="@+id/menu_profile"
