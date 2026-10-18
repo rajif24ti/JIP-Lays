@@ -15,7 +15,6 @@ class BaseActivity : AppCompatActivity() {
         binding = ActivityBaseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Tampilkan Dashboard saat halaman pertama kali dibuka
         if (savedInstanceState == null) {
             replaceFragment(HomeFragment())
         }
