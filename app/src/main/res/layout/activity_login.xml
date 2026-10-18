@@ -153,6 +153,19 @@
             app:backgroundTint="@null"
             app:cornerRadius="7dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnKeRegistrasi"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:layout_marginTop="9dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Buat Akun Baru"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:backgroundTint="@color/primary_navy"
+            app:cornerRadius="7dp" />
+
     </LinearLayout>
 
 </ScrollView>

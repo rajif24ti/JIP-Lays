@@ -40,6 +40,12 @@ class LoginActivity : AppCompatActivity() {
 
         binding.actRole.setAdapter(adapter)
 
+        binding.btnKeRegistrasi.setOnClickListener {
+            startActivity(
+                Intent(this, RegisterActivity::class.java)
+            )
+        }
+
         // Tombol Login
         binding.btnLogin.setOnClickListener {
 
@@ -71,14 +77,43 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (username == password) {
+            val savedUsername =
+                sharedPref.getString("username", "")
 
-                // Simpan status login dan data pengguna
+            val savedPassword =
+                sharedPref.getString("password", "")
+
+            val savedRole =
+                sharedPref.getString("role", "")
+
+            val loginValid = username == password ||
+                    (
+                            username == savedUsername &&
+                                    password == savedPassword
+                            )
+
+            if (loginValid) {
+
+                // Simpan status dan data sesi pengguna
                 sharedPref.edit()
                     .putBoolean("isLogin", true)
                     .putString("username", username)
-                    .putString("role", role)
+                    .putString(
+                        "role",
+                        if (
+                            username == savedUsername &&
+                            password == savedPassword &&
+                            !savedRole.isNullOrEmpty()
+                        ) {
+                            savedRole
+                        } else {
+                            role
+                        }
+                    )
                     .apply()
+
+                val roleLogin =
+                    sharedPref.getString("role", role) ?: role
 
                 Toast.makeText(
                     this,
