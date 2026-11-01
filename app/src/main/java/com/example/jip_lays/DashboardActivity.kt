@@ -57,22 +57,6 @@ class DashboardActivity : AppCompatActivity() {
                 .show()
         }
 
-        // Menu cepat: Absensi
-        binding.cardAbsensi.setOnClickListener {
-            startActivity(
-                Intent(this, AbsensiActivity::class.java)
-            )
-        }
-
-        // Menu cepat: Gizi
-        binding.cardGizi.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Menu Gizi dipilih",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
         // Navigasi bawah
         binding.bottomNavigation.selectedItemId = R.id.menu_home
 

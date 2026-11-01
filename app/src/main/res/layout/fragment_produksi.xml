@@ -196,188 +196,60 @@
                 android:textSize="13sp"
                 android:fontFamily="@font/inter_18pt_regular" />
 
-            <!-- Produksi 1 -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Search & Filter Produksi -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="2dp"
-                app:strokeColor="#DFE6EF"
-                app:strokeWidth="1dp">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:hintEnabled="false"
+                    app:startIconDrawable="@drawable/ic_search">
 
-                    <TextView
-                        android:id="@+id/tvSekolahPertama"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSearchProduksi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="SD Negeri 001"
-                        android:textColor="@color/primary_navy"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/montserrat_bold" />
+                        android:hint="Cari nama sekolah..."
+                        android:inputType="text"
+                        android:textSize="13sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/tvMenuPertama"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusBottomStart="10dp"
+                    app:boxCornerRadiusBottomEnd="10dp"
+                    app:hintEnabled="false">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/actFilterStatusProduksi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Nasi, ayam, sayur, dan buah"
-                        android:textColor="@color/text_body"
-                        android:textSize="14sp" />
+                        android:hint="Filter status produksi"
+                        android:inputType="none"
+                        android:textSize="13sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvPorsiPertama"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="400 porsi"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/montserrat_medium" />
-
-                    <TextView
-                        android:id="@+id/tvStatusPertama"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="#DDF5E5"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="6dp"
-                        android:text="Selesai"
-                        android:textColor="#207544"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/montserrat_medium" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Produksi 2 -->
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
+                android:id="@+id/containerProduksi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="2dp"
-                app:strokeColor="#DFE6EF"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvSekolahKedua"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="SMP Negeri 001"
-                        android:textColor="@color/primary_navy"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/montserrat_bold" />
-
-                    <TextView
-                        android:id="@+id/tvMenuKedua"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Nasi, ikan, sayur, dan buah"
-                        android:textColor="@color/text_body"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tvPorsiKedua"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="350 porsi"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/montserrat_medium" />
-
-                    <TextView
-                        android:id="@+id/tvStatusKedua"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="#FFF0CC"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="6dp"
-                        android:text="Diproses"
-                        android:textColor="#956000"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/montserrat_medium" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Produksi 3 -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="2dp"
-                app:strokeColor="#DFE6EF"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/tvSekolahKetiga"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="SD Negeri 002"
-                        android:textColor="@color/primary_navy"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/montserrat_bold" />
-
-                    <TextView
-                        android:id="@+id/tvMenuKetiga"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Nasi, telur, sayur, dan buah"
-                        android:textColor="@color/text_body"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tvPorsiKetiga"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="300 porsi"
-                        android:textColor="@color/primary_blue"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/montserrat_medium" />
-
-                    <TextView
-                        android:id="@+id/tvStatusKetiga"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:background="#E7EAF0"
-                        android:paddingHorizontal="12dp"
-                        android:paddingVertical="6dp"
-                        android:text="Menunggu"
-                        android:textColor="#505B6B"
-                        android:textSize="12sp"
-                        android:fontFamily="@font/montserrat_medium" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:orientation="vertical" />
 
             <!-- Informasi Hak Akses -->
             <TextView

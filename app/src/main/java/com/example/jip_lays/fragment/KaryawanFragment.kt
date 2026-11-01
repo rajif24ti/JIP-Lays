@@ -1,15 +1,19 @@
-package com.example.jip_lays
+package com.example.jip_lays.fragment
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.jip_lays.R
 import com.example.jip_lays.databinding.FragmentKaryawanBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -21,6 +25,8 @@ class KaryawanFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var jenisAbsensi = "Masuk"
+    private var searchQuery = ""
+    private var selectedDivisi = "Semua Divisi"
 
     private val daftarKaryawan = mutableListOf(
         "Siti Rahayu|Juru Masak|Hadir",
@@ -44,10 +50,18 @@ class KaryawanFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Check role access
+        val role = requireActivity().getSharedPreferences("user_pref", android.content.Context.MODE_PRIVATE)
+            .getString("role", "Penanggung Jawab Dapur") ?: "Penanggung Jawab Dapur"
+
+        if (role != "Penanggung Jawab Dapur") {
+            Toast.makeText(requireContext(), "Akses terbatas: Menu Karyawan dikelola Penanggung Jawab Dapur", Toast.LENGTH_SHORT).show()
+        }
+
         // Menampilkan tanggal hari ini
         binding.tvTanggal.text = SimpleDateFormat(
             "dd MMMM yyyy",
-            Locale("id", "ID")
+            Locale.forLanguageTag("id-ID")
         ).format(Date())
 
         // Kondisi awal tab
@@ -64,6 +78,26 @@ class KaryawanFragment : Fragment() {
             jenisAbsensi = "Pulang"
             setTabAktif(false)
         }
+
+        // Setup filter divisi dropdown
+        val divisiList = arrayOf("Semua Divisi", "Juru Masak", "Petugas Persiapan", "Petugas Pengemasan")
+        val divisiAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, divisiList)
+        binding.actFilterDivisi.setAdapter(divisiAdapter)
+        binding.actFilterDivisi.setText("Semua Divisi", false)
+        binding.actFilterDivisi.setOnItemClickListener { _, _, position, _ ->
+            selectedDivisi = divisiList[position]
+            tampilkanDaftarKaryawan()
+        }
+
+        // Search listener
+        binding.etSearchKaryawan.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchQuery = s.toString().trim().lowercase()
+                tampilkanDaftarKaryawan()
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         // Simpan data karyawan dan absensi
         binding.btnSimpan.setOnClickListener {
@@ -137,10 +171,32 @@ class KaryawanFragment : Fragment() {
     private fun tampilkanDaftarKaryawan() {
         binding.containerKaryawan.removeAllViews()
 
-        binding.tvJumlahKaryawan.text =
-            "${daftarKaryawan.size} data karyawan"
+        val filteredList = daftarKaryawan.filter { data ->
+            val bagian = data.split("|")
+            val nama = bagian[0]
+            val jabatan = bagian[1]
 
-        daftarKaryawan.forEachIndexed { index, data ->
+            val matchesSearch = searchQuery.isEmpty() || nama.lowercase().contains(searchQuery)
+            val matchesDivisi = selectedDivisi == "Semua Divisi" || jabatan.lowercase().contains(selectedDivisi.lowercase())
+
+            matchesSearch && matchesDivisi
+        }
+
+        binding.tvJumlahKaryawan.text =
+            "${filteredList.size} data karyawan ditemukan"
+
+        if (filteredList.isEmpty()) {
+            val tvEmpty = TextView(requireContext()).apply {
+                text = "Tidak ada data karyawan yang cocok."
+                textSize = 13f
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.text_body))
+                setPadding(0, 16, 0, 16)
+            }
+            binding.containerKaryawan.addView(tvEmpty)
+            return
+        }
+
+        filteredList.forEachIndexed { index, data ->
             val bagian = data.split("|")
             val nama = bagian[0]
             val jabatan = bagian[1]
