@@ -17,7 +17,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -25,13 +24,13 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.jip_lays.LaporanKerusakanActivity
 import com.example.jip_lays.KerusakanRepository
 import com.example.jip_lays.R
 import com.example.jip_lays.databinding.FragmentLaporanBinding
 import com.google.android.material.card.MaterialCardView
 import java.io.File
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -120,13 +119,20 @@ class LaporanFragment : Fragment() {
             }
         }
 
-        // Setup filter prioritas dropdown
-        val prioritasList = arrayOf("Semua Prioritas", "Rendah", "Sedang", "Tinggi", "Darurat")
-        val prioritasAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, prioritasList)
-        binding.actFilterPrioritas.setAdapter(prioritasAdapter)
-        binding.actFilterPrioritas.setText("Semua Prioritas", false)
-        binding.actFilterPrioritas.setOnItemClickListener { _, _, position, _ ->
-            selectedPrioritas = prioritasList[position]
+        // Setup ChipGroup filter listener (MODUL 10 Requirement)
+        binding.chipGroupPrioritas.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isEmpty()) {
+                selectedPrioritas = "Semua Prioritas"
+            } else {
+                val chipId = checkedIds.first()
+                selectedPrioritas = when (chipId) {
+                    R.id.chipRendah -> "Rendah"
+                    R.id.chipSedang -> "Sedang"
+                    R.id.chipTinggi -> "Tinggi"
+                    R.id.chipDarurat -> "Darurat"
+                    else -> "Semua Prioritas"
+                }
+            }
             tampilkanDaftarKerusakan()
         }
 
@@ -244,15 +250,17 @@ class LaporanFragment : Fragment() {
             }
             layout.addView(tvPrioritas, prioritasParams)
 
-            // If photo path exists and file exists, render photo preview
+            // MODUL 10 Requirement: Glide Image Loading for evidence photos
             if (!item.photoPath.isNullOrEmpty()) {
                 val imgFile = File(item.photoPath)
                 if (imgFile.exists()) {
                     val imgPreview = ImageView(requireContext()).apply {
                         scaleType = ImageView.ScaleType.CENTER_CROP
-                        val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-                        setImageBitmap(bitmap)
                     }
+                    Glide.with(this)
+                        .load(imgFile)
+                        .into(imgPreview)
+
                     val imgParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         (140 * resources.displayMetrics.density).toInt()
