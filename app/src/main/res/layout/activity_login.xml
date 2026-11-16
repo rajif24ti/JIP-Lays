@@ -125,18 +125,30 @@
             android:textColor="@color/text_body"
             android:textSize="9sp" />
 
-        <AutoCompleteTextView
-            android:id="@+id/actRole"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:background="@drawable/bg_input"
-            android:fontFamily="@font/inter_18pt_regular"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:text="Penanggung Jawab Dapur"
-            android:textColor="@color/text_body"
-            android:textSize="10sp" />
+            app:boxCornerRadiusBottomEnd="7dp"
+            app:boxCornerRadiusBottomStart="7dp"
+            app:boxCornerRadiusTopEnd="7dp"
+            app:boxCornerRadiusTopStart="7dp"
+            app:hintEnabled="false">
+
+            <AutoCompleteTextView
+                android:id="@+id/actRole"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:fontFamily="@font/inter_18pt_regular"
+                android:hint="Pilih Role Pengguna"
+                android:inputType="none"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="Penanggung Jawab Dapur"
+                android:textColor="@color/text_body"
+                android:textSize="12sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- BUTTON -->
         <com.google.android.material.button.MaterialButton

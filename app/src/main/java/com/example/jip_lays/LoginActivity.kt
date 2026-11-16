@@ -39,6 +39,12 @@ class LoginActivity : AppCompatActivity() {
         )
 
         binding.actRole.setAdapter(adapter)
+        binding.actRole.setOnClickListener {
+            binding.actRole.showDropDown()
+        }
+        binding.actRole.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) binding.actRole.showDropDown()
+        }
 
         binding.btnKeRegistrasi.setOnClickListener {
             startActivity(
