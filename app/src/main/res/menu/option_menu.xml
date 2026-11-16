@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/option_home"
+        android:title="Beranda"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_kotak_saran"
+        android:title="Kotak Saran &amp; Sekolah"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_tutorial"
+        android:title="Tutorial Penggunaan"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_about"
+        android:title="Tentang Aplikasi"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_help"
+        android:title="Bantuan"
+        app:showAsAction="never" />
+
+</menu>
