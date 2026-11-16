@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/border"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imgMenuIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:contentDescription="Ikon Menu"
+            android:src="@drawable/ic_dashboard"
+            app:tint="@color/primary_blue" />
+
+        <TextView
+            android:id="@+id/tvMenuTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Nama Menu"
+            android:textColor="@color/primary_navy"
+            android:textSize="14sp"
+            android:fontFamily="@font/montserrat_bold" />
+
+        <TextView
+            android:id="@+id/tvMenuDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Deskripsi singkat operasional."
+            android:textColor="@color/text_body"
+            android:textSize="11sp"
+            android:fontFamily="@font/inter_18pt_regular" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

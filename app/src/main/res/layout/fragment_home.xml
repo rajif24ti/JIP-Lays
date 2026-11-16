@@ -13,11 +13,11 @@
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="0dp"
-        android:layout_height="64dp"
+        android:layout_height="88dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="18dp"
-        android:background="@color/primary_navy"
+        android:background="@drawable/bg_header_wave"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -71,6 +71,7 @@
         android:fillViewport="true"
         android:clipToPadding="false"
         android:paddingBottom="12dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -287,6 +288,23 @@
                 </com.google.android.material.card.MaterialCardView>
 
             </GridLayout>
+
+            <!-- Menu Operasional (MODUL 11: RecyclerView + GridLayoutManager) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Fitur Operasional Dapur"
+                android:textColor="@color/primary_navy"
+                android:textSize="17sp"
+                android:fontFamily="@font/montserrat_bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMenuGrid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"/>
 
             <!-- Aktivitas Terbaru -->
             <TextView
