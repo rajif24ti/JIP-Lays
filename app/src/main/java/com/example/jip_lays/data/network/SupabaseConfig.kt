@@ -1,12 +1,13 @@
 package com.example.jip_lays.data.network
 
 import android.content.Context
+import com.example.jip_lays.BuildConfig
 
 object SupabaseConfig {
 
     // Konfigurasi URL dan Anon Key Supabase
-    var BASE_URL: String = "https://your-supabase-project.supabase.co/"
-    var ANON_KEY: String = "your-supabase-anon-key"
+    var BASE_URL: String = normalizeUrl(BuildConfig.SUPABASE_URL)
+    var ANON_KEY: String = BuildConfig.SUPABASE_ANON_KEY
     const val SCHEMA = "mobile"
 
     fun init(context: Context) {
@@ -15,7 +16,7 @@ object SupabaseConfig {
         val customKey = prefs.getString("supabase_key", null)
 
         if (!customUrl.isNullOrEmpty()) {
-            BASE_URL = if (customUrl.endsWith("/")) customUrl else "$customUrl/"
+            BASE_URL = normalizeUrl(customUrl)
         }
         if (!customKey.isNullOrEmpty()) {
             ANON_KEY = customKey
@@ -23,7 +24,7 @@ object SupabaseConfig {
     }
 
     fun saveConfig(context: Context, url: String, key: String) {
-        val cleanUrl = if (url.endsWith("/")) url else "$url/"
+        val cleanUrl = normalizeUrl(url)
         BASE_URL = cleanUrl
         ANON_KEY = key
         context.getSharedPreferences("supabase_config", Context.MODE_PRIVATE)
@@ -31,5 +32,16 @@ object SupabaseConfig {
             .putString("supabase_url", cleanUrl)
             .putString("supabase_key", key)
             .apply()
+    }
+
+    private fun normalizeUrl(url: String): String {
+        var cleanUrl = url.trim()
+            .removeSuffix("/rest/v1")
+            .removeSuffix("/rest/v1/")
+            .removeSuffix("/")
+        if (cleanUrl.isNotBlank() && !cleanUrl.contains("://")) {
+            cleanUrl = "https://$cleanUrl"
+        }
+        return if (cleanUrl.endsWith("/")) cleanUrl else "$cleanUrl/"
     }
 }

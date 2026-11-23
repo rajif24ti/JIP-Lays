@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 object SupabaseClient {
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        level = HttpLoggingInterceptor.Level.BASIC
     }
 
     private val okHttpClient = OkHttpClient.Builder()
@@ -40,5 +40,9 @@ object SupabaseClient {
 
     val produksiService: ProduksiService by lazy {
         retrofit.create(ProduksiService::class.java)
+    }
+
+    val storageService: StorageService by lazy {
+        retrofit.create(StorageService::class.java)
     }
 }

@@ -9,13 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.jip_lays.R
 import com.example.jip_lays.data.model.KaryawanModel
 import com.example.jip_lays.data.repository.KaryawanRemoteRepository
+import com.example.jip_lays.databinding.DialogKaryawanFormBinding
 import com.example.jip_lays.databinding.FragmentKaryawanDaftarBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
@@ -38,6 +37,7 @@ class KaryawanDaftarFragment : Fragment() {
         "Divisi Kebersihan",
         "Divisi Logistik/Persiapan"
     )
+    private val statusKaryawan = listOf("Aktif", "Tidak Aktif")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,7 +76,6 @@ class KaryawanDaftarFragment : Fragment() {
 
         binding.listKaryawan.emptyView = binding.tvKaryawanKosong
 
-        loadDataFromSupabase()
     }
 
     override fun onResume() {
@@ -132,39 +131,65 @@ class KaryawanDaftarFragment : Fragment() {
     }
 
     private fun showTambahKaryawanDialog() {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_karyawan_form, null)
-        val etNama = dialogView.findViewById<EditText>(R.id.etNamaKaryawanDialog)
-        val actDivisi = dialogView.findViewById<AutoCompleteTextView>(R.id.actDivisiKaryawanDialog)
+        val formBinding = DialogKaryawanFormBinding.inflate(layoutInflater)
+        val etNama = formBinding.etNamaKaryawanDialog
+        val actDivisi = formBinding.actDivisiKaryawanDialog
+        val etJabatan = formBinding.etJabatanKaryawanDialog
+        val etTelepon = formBinding.etTeleponKaryawanDialog
+        val etAlamat = formBinding.etAlamatKaryawanDialog
+        val actStatus = formBinding.actStatusKeaktifanDialog
 
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, daftarDivisi)
         actDivisi.setAdapter(adapter)
         actDivisi.setOnClickListener { actDivisi.showDropDown() }
+        actStatus.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, statusKaryawan))
+        actStatus.setText("Aktif", false)
+        actStatus.setOnClickListener { actStatus.showDropDown() }
 
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Tambah Karyawan Baru")
-            .setView(dialogView)
-            .setPositiveButton("Simpan") { dialog, _ ->
+            .setView(formBinding.root)
+            .setPositiveButton("Simpan", null)
+            .setNegativeButton("Batal", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val nama = etNama.text.toString().trim()
                 val divisi = actDivisi.text.toString().trim()
+                val jabatan = etJabatan.text.toString().trim()
+                val telepon = etTelepon.text.toString().trim()
+                val alamat = etAlamat.text.toString().trim()
+                val status = actStatus.text.toString().trim()
 
-                if (nama.isEmpty() || divisi.isEmpty()) {
+                if (nama.isEmpty() || divisi !in daftarDivisi || jabatan.isEmpty() ||
+                    telepon.isEmpty() || alamat.isEmpty() || status !in statusKaryawan
+                ) {
                     Toast.makeText(requireContext(), "Mohon lengkapi seluruh data", Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
+                    return@setOnClickListener
                 }
 
                 dialog.dismiss()
-                tambahKaryawanSupabase(nama, divisi)
+                tambahKaryawanSupabase(
+                    KaryawanModel(
+                        nama = nama,
+                        divisi = divisi,
+                        jabatan = jabatan,
+                        telepon = telepon,
+                        alamat = alamat,
+                        statusKeaktifan = status
+                    )
+                )
             }
-            .setNegativeButton("Batal", null)
-            .show()
+        }
+        dialog.show()
     }
 
-    private fun tambahKaryawanSupabase(nama: String, divisi: String) {
+    private fun tambahKaryawanSupabase(karyawan: KaryawanModel) {
         val currentBinding = _binding ?: return
         currentBinding.progressBarKaryawan.visibility = View.VISIBLE
 
         lifecycleScope.launch {
-            val result = repository.insertKaryawan(getToken(), KaryawanModel(nama = nama, divisi = divisi))
+            val result = repository.insertKaryawan(getToken(), karyawan)
             currentBinding.progressBarKaryawan.visibility = View.GONE
 
             result.onSuccess { newKaryawan ->
@@ -177,41 +202,73 @@ class KaryawanDaftarFragment : Fragment() {
     }
 
     private fun showEditKaryawanDialog(karyawan: KaryawanModel) {
-        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_karyawan_form, null)
-        val etNama = dialogView.findViewById<EditText>(R.id.etNamaKaryawanDialog)
-        val actDivisi = dialogView.findViewById<AutoCompleteTextView>(R.id.actDivisiKaryawanDialog)
+        val formBinding = DialogKaryawanFormBinding.inflate(layoutInflater)
+        val etNama = formBinding.etNamaKaryawanDialog
+        val actDivisi = formBinding.actDivisiKaryawanDialog
+        val etJabatan = formBinding.etJabatanKaryawanDialog
+        val etTelepon = formBinding.etTeleponKaryawanDialog
+        val etAlamat = formBinding.etAlamatKaryawanDialog
+        val actStatus = formBinding.actStatusKeaktifanDialog
 
         etNama.setText(karyawan.nama)
+        etJabatan.setText(karyawan.jabatan.orEmpty())
+        etTelepon.setText(karyawan.telepon.orEmpty())
+        etAlamat.setText(karyawan.alamat.orEmpty())
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, daftarDivisi)
         actDivisi.setAdapter(adapter)
         actDivisi.setText(karyawan.divisi, false)
         actDivisi.setOnClickListener { actDivisi.showDropDown() }
+        actStatus.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, statusKaryawan))
+        actStatus.setText(karyawan.statusKeaktifan ?: "Aktif", false)
+        actStatus.setOnClickListener { actStatus.showDropDown() }
 
-        MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Edit Data Karyawan")
-            .setView(dialogView)
-            .setPositiveButton("Simpan Perubahan") { dialog, _ ->
+            .setView(formBinding.root)
+            .setPositiveButton("Simpan Perubahan", null)
+            .setNegativeButton("Batal", null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val nama = etNama.text.toString().trim()
                 val divisi = actDivisi.text.toString().trim()
+                val jabatan = etJabatan.text.toString().trim()
+                val telepon = etTelepon.text.toString().trim()
+                val alamat = etAlamat.text.toString().trim()
+                val status = actStatus.text.toString().trim()
 
-                if (nama.isEmpty() || divisi.isEmpty() || karyawan.id == null) {
+                if (nama.isEmpty() || divisi !in daftarDivisi || jabatan.isEmpty() ||
+                    telepon.isEmpty() || alamat.isEmpty() || status !in statusKaryawan ||
+                    karyawan.id == null
+                ) {
                     Toast.makeText(requireContext(), "Mohon lengkapi seluruh data", Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
+                    return@setOnClickListener
                 }
 
                 dialog.dismiss()
-                editKaryawanSupabase(karyawan.id, nama, divisi)
+                editKaryawanSupabase(
+                    karyawan.id,
+                    KaryawanModel(
+                        id = karyawan.id,
+                        nama = nama,
+                        divisi = divisi,
+                        jabatan = jabatan,
+                        telepon = telepon,
+                        alamat = alamat,
+                        statusKeaktifan = status
+                    )
+                )
             }
-            .setNegativeButton("Batal", null)
-            .show()
+        }
+        dialog.show()
     }
 
-    private fun editKaryawanSupabase(id: Long, nama: String, divisi: String) {
+    private fun editKaryawanSupabase(id: Long, karyawan: KaryawanModel) {
         val currentBinding = _binding ?: return
         currentBinding.progressBarKaryawan.visibility = View.VISIBLE
 
         lifecycleScope.launch {
-            val result = repository.updateKaryawan(getToken(), id, KaryawanModel(id = id, nama = nama, divisi = divisi))
+            val result = repository.updateKaryawan(getToken(), id, karyawan)
             currentBinding.progressBarKaryawan.visibility = View.GONE
 
             result.onSuccess { updated ->

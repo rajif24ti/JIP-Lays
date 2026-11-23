@@ -5,11 +5,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-data class Karyawan(
-    val nama: String,
-    val divisi: String
-)
-
 data class AbsensiHariIni(
     val tanggal: String,
     val jamMasuk: String?,
@@ -17,29 +12,6 @@ data class AbsensiHariIni(
 )
 
 object KaryawanRepository {
-
-    val daftarKaryawan = listOf(
-        Karyawan("Budi Santoso", "Divisi Produksi"),
-        Karyawan("Siti Rahayu", "Divisi Produksi"),
-        Karyawan("Andi Saputra", "Divisi Logistik/Persiapan"),
-        Karyawan("Dewi Lestari", "Divisi Pengemasan & Pemorsian"),
-        Karyawan("Ahmad Hidayat", "Divisi Distribusi"),
-        Karyawan("Rina Wijaya", "Divisi Kebersihan"),
-        Karyawan("Bambang Pamungkas", "Divisi Logistik/Persiapan"),
-        Karyawan("Eko Prasetyo", "Divisi Produksi"),
-        Karyawan("Fitriani Utami", "Divisi Pengemasan & Pemorsian"),
-        Karyawan("Hendra Gunawan", "Divisi Distribusi"),
-        Karyawan("Indah Permata", "Divisi Kebersihan"),
-        Karyawan("Joko Susilo", "Divisi Logistik/Persiapan"),
-        Karyawan("Kartika Sari", "Divisi Produksi"),
-        Karyawan("Lukman Hakim", "Divisi Pengemasan & Pemorsian"),
-        Karyawan("Maya Anggraini", "Divisi Distribusi"),
-        Karyawan("Nurhadi", "Divisi Kebersihan"),
-        Karyawan("Oscar Pratama", "Divisi Logistik/Persiapan"),
-        Karyawan("Putri Maharani", "Divisi Produksi"),
-        Karyawan("Rizky Ramadhan", "Divisi Pengemasan & Pemorsian"),
-        Karyawan("Tri Wahyuni", "Divisi Distribusi")
-    )
 
     val daftarDivisi = listOf(
         "Divisi Produksi",

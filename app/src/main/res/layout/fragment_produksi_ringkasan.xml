@@ -34,19 +34,21 @@
                     android:fontFamily="@font/inter_18pt_regular" />
 
                 <TextView
+                    android:id="@+id/tvRingkasanTotalPorsi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="2.000 Porsi"
+                    android:text="0 Porsi"
                     android:textColor="@color/white"
                     android:textSize="30sp"
                     android:fontFamily="@font/montserrat_bold" />
 
                 <TextView
+                    android:id="@+id/tvRingkasanTanggalInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Direncanakan untuk 5 Sekolah Penerima MBG"
+                    android:text="Data produksi terhitung otomatis dari Supabase"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -77,9 +79,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvRingkasanTotalMenu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3"
+                        android:text="0"
                         android:textColor="@color/primary_blue"
                         android:textSize="24sp"
                         android:fontFamily="@font/montserrat_bold" />
@@ -111,9 +114,10 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvRingkasanTotalSekolah"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5"
+                        android:text="0"
                         android:textColor="@color/primary_blue"
                         android:textSize="24sp"
                         android:fontFamily="@font/montserrat_bold" />
@@ -130,11 +134,12 @@
 
         <!-- Informational Note -->
         <TextView
+            android:id="@+id/tvRingkasanStatusInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="Status operasional produksi diperbarui secara berkala."
+            android:text="Status operasional produksi diperbarui secara otomatis."
             android:textColor="#8795A8"
             android:textSize="12sp" />
 

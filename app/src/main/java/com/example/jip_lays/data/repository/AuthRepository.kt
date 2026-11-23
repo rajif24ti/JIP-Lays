@@ -3,6 +3,9 @@ package com.example.jip_lays.data.repository
 import com.example.jip_lays.data.model.*
 import com.example.jip_lays.data.network.SupabaseClient
 import com.example.jip_lays.data.network.SupabaseConfig
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class AuthRepository {
 
@@ -12,8 +15,8 @@ class AuthRepository {
         nama: String,
         handphone: String,
         role: String
-    ): Result<SignUpResponse> {
-        return try {
+    ): Result<SignUpResponse> = withContext(Dispatchers.IO) {
+        try {
             val metadata = UserMetadata(nama = nama, handphone = handphone, role = role)
             val request = SignUpRequest(email = email, password = password, data = metadata)
             val response = SupabaseClient.authService.signUp(body = request)
@@ -52,13 +55,18 @@ class AuthRepository {
                 val errorMsg = response.errorBody()?.string() ?: "Registrasi gagal"
                 Result.failure(Exception(errorMsg))
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
+            if (e is java.io.InterruptedIOException || (e is java.io.IOException && e.message?.contains("Canceled", ignoreCase = true) == true)) {
+                throw CancellationException("Job was cancelled", e)
+            }
             Result.failure(e)
         }
     }
 
-    suspend fun login(email: String, password: String): Result<TokenResponse> {
-        return try {
+    suspend fun login(email: String, password: String): Result<TokenResponse> = withContext(Dispatchers.IO) {
+        try {
             val request = TokenRequest(email = email, password = password)
             val response = SupabaseClient.authService.login(body = request)
 
@@ -68,7 +76,12 @@ class AuthRepository {
                 val errorMsg = response.errorBody()?.string() ?: "Login gagal"
                 Result.failure(Exception(errorMsg))
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
+            if (e is java.io.InterruptedIOException || (e is java.io.IOException && e.message?.contains("Canceled", ignoreCase = true) == true)) {
+                throw CancellationException("Job was cancelled", e)
+            }
             Result.failure(e)
         }
     }

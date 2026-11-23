@@ -1,5 +1,6 @@
 package com.example.jip_lays.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,13 +8,19 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.jip_lays.data.model.KaryawanModel
+import com.example.jip_lays.data.repository.KaryawanRemoteRepository
 import com.example.jip_lays.databinding.FragmentKaryawanAbsensiBinding
+import kotlinx.coroutines.launch
 
 class KaryawanAbsensiFragment : Fragment() {
 
     private var _binding: FragmentKaryawanAbsensiBinding? = null
     private val binding get() = _binding!!
-    private var selectedNama: String? = null
+    private val repository = KaryawanRemoteRepository()
+    private var activeEmployees: List<KaryawanModel> = emptyList()
+    private var selectedKaryawan: KaryawanModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,96 +33,123 @@ class KaryawanAbsensiFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.tvTanggal.text = KaryawanRepository.tanggalHariIni()
-        binding.actNamaKaryawan.setAdapter(
-            ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
-                KaryawanRepository.daftarKaryawan.map { it.nama }
-            )
-        )
-        binding.actNamaKaryawan.setOnClickListener { binding.actNamaKaryawan.showDropDown() }
-        binding.actNamaKaryawan.setOnItemClickListener { _, _, position, _ ->
-            val karyawan = KaryawanRepository.daftarKaryawan[position]
-            selectedNama = karyawan.nama
-            binding.actDivisi.setText(karyawan.divisi, false)
-            tampilkanAbsensi()
-        }
-
-        binding.actDivisi.setAdapter(
+        val currentBinding = _binding ?: return
+        currentBinding.tvTanggal.text = KaryawanRepository.tanggalHariIni()
+        currentBinding.actDivisi.setAdapter(
             ArrayAdapter(
                 requireContext(),
                 android.R.layout.simple_dropdown_item_1line,
                 KaryawanRepository.daftarDivisi
             )
         )
-        binding.actDivisi.setOnClickListener { binding.actDivisi.showDropDown() }
-        binding.actDivisi.setOnItemClickListener { _, _, _, _ -> validasiDivisiTerpilih() }
+        currentBinding.actNamaKaryawan.setOnClickListener { currentBinding.actNamaKaryawan.showDropDown() }
+        currentBinding.actNamaKaryawan.setOnItemClickListener { _, _, position, _ ->
+            selectedKaryawan = activeEmployees.getOrNull(position)
+            currentBinding.actDivisi.setText(selectedKaryawan?.divisi.orEmpty(), false)
+            tampilkanAbsensi()
+        }
+        currentBinding.actDivisi.setOnClickListener { currentBinding.actDivisi.showDropDown() }
+        currentBinding.actDivisi.setOnItemClickListener { _, _, _, _ -> validasiDivisiTerpilih() }
+        currentBinding.btnCatatMasuk.setOnClickListener { catatAbsensi(isMasuk = true) }
+        currentBinding.btnCatatPulang.setOnClickListener { catatAbsensi(isMasuk = false) }
+        loadEmployees()
+    }
 
-        binding.btnCatatMasuk.setOnClickListener { catatAbsensi(isMasuk = true) }
-        binding.btnCatatPulang.setOnClickListener { catatAbsensi(isMasuk = false) }
-        tampilkanAbsensi()
+    override fun onResume() {
+        super.onResume()
+        if (_binding != null) loadEmployees()
+    }
+
+    private fun loadEmployees() {
+        val currentBinding = _binding ?: return
+        val token = requireContext().getSharedPreferences("user_pref", Context.MODE_PRIVATE)
+            .getString("access_token", null)
+        lifecycleScope.launch {
+            repository.getKaryawan(token).onSuccess { rows ->
+                activeEmployees = rows.filter { it.statusKeaktifan.equals("Aktif", ignoreCase = true) }
+                currentBinding.actNamaKaryawan.setAdapter(
+                    ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_dropdown_item_1line,
+                        activeEmployees.map { it.nama }
+                    )
+                )
+                selectedKaryawan = selectedKaryawan?.let { selected ->
+                    activeEmployees.firstOrNull { it.id == selected.id }
+                }
+                if (selectedKaryawan == null) {
+                    currentBinding.actNamaKaryawan.setText("", false)
+                    currentBinding.actDivisi.setText("", false)
+                }
+                tampilkanAbsensi()
+            }.onFailure {
+                Toast.makeText(
+                    requireContext(),
+                    "Gagal memuat karyawan: ${it.localizedMessage ?: it.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     private fun validasiDivisiTerpilih() {
-        val nama = selectedNama ?: return
-        val karyawan = KaryawanRepository.daftarKaryawan.firstOrNull { it.nama == nama } ?: return
-        if (binding.actDivisi.text.toString() != karyawan.divisi) {
-            binding.actDivisi.setText(karyawan.divisi, false)
+        val selected = selectedKaryawan ?: return
+        val currentBinding = _binding ?: return
+        if (currentBinding.actDivisi.text.toString() != selected.divisi) {
+            currentBinding.actDivisi.setText(selected.divisi, false)
             Toast.makeText(requireContext(), "Divisi mengikuti data karyawan terpilih", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun tampilkanAbsensi() {
         val currentBinding = _binding ?: return
-        val nama = selectedNama
         currentBinding.tvJamMasuk.text = "Jam masuk: —"
         currentBinding.tvJamPulang.text = "Jam pulang: —"
-        if (nama == null) return
-
-        val attendance = KaryawanRepository.absensiHariIni(requireContext(), nama)
+        val selected = selectedKaryawan ?: return
+        val attendance = KaryawanRepository.absensiHariIni(requireContext(), attendanceKey(selected))
         currentBinding.tvJamMasuk.text = "Jam masuk: ${attendance.jamMasuk ?: "—"}"
         currentBinding.tvJamPulang.text = "Jam pulang: ${attendance.jamPulang ?: "—"}"
     }
 
     private fun catatAbsensi(isMasuk: Boolean) {
-        val nama = selectedNama
-        val karyawan = KaryawanRepository.daftarKaryawan.firstOrNull { it.nama == nama }
-        if (nama == null || karyawan == null || binding.actNamaKaryawan.text.toString() != nama) {
+        val currentBinding = _binding ?: return
+        val selected = selectedKaryawan
+        if (selected == null || currentBinding.actNamaKaryawan.text.toString() != selected.nama) {
             Toast.makeText(requireContext(), "Pilih nama karyawan dari daftar", Toast.LENGTH_SHORT).show()
             return
         }
-        if (binding.actDivisi.text.toString() != karyawan.divisi) {
+        if (currentBinding.actDivisi.text.toString() != selected.divisi) {
             Toast.makeText(requireContext(), "Pilih divisi yang sesuai dengan karyawan", Toast.LENGTH_SHORT).show()
             return
         }
-        if (!isMasuk && KaryawanRepository.absensiHariIni(requireContext(), nama).jamMasuk == null) {
+        val key = attendanceKey(selected)
+        if (!isMasuk && KaryawanRepository.absensiHariIni(requireContext(), key).jamMasuk == null) {
             Toast.makeText(requireContext(), "Catat jam masuk terlebih dahulu", Toast.LENGTH_SHORT).show()
             return
         }
-
-        val berhasil = if (isMasuk) {
-            KaryawanRepository.catatJamMasuk(requireContext(), nama)
+        val saved = if (isMasuk) {
+            KaryawanRepository.catatJamMasuk(requireContext(), key)
         } else {
-            KaryawanRepository.catatJamPulang(requireContext(), nama)
+            KaryawanRepository.catatJamPulang(requireContext(), key)
         }
-        if (berhasil) {
+        if (saved) {
             tampilkanAbsensi()
-            val keterangan = if (isMasuk) "Jam masuk" else "Jam pulang"
+            val label = if (isMasuk) "Jam masuk" else "Jam pulang"
             Toast.makeText(
                 requireContext(),
-                "$keterangan tercatat pukul ${KaryawanRepository.waktuSekarang()}",
+                "$label tercatat pukul ${KaryawanRepository.waktuSekarang()}",
                 Toast.LENGTH_SHORT
             ).show()
         } else {
-            val keterangan = if (isMasuk) "Jam masuk" else "Jam pulang"
-            Toast.makeText(requireContext(), "$keterangan hari ini sudah tercatat", Toast.LENGTH_SHORT).show()
+            val label = if (isMasuk) "Jam masuk" else "Jam pulang"
+            Toast.makeText(requireContext(), "$label hari ini sudah tercatat", Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun attendanceKey(karyawan: KaryawanModel): String = karyawan.id?.toString() ?: karyawan.nama
+
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

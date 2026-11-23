@@ -3,80 +3,62 @@ package com.example.jip_lays.data.repository
 import com.example.jip_lays.data.model.ProduksiModel
 import com.example.jip_lays.data.network.SupabaseClient
 import com.example.jip_lays.data.network.SupabaseConfig
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ProduksiRemoteRepository {
 
-    suspend fun getProduksi(token: String?): Result<List<ProduksiModel>> {
-        return try {
-            val authHeader = if (!token.isNullOrEmpty()) "Bearer $token" else "Bearer ${SupabaseConfig.ANON_KEY}"
-            val response = SupabaseClient.produksiService.getProduksi(authHeader = authHeader)
-
-            if (response.isSuccessful && response.body() != null) {
-                Result.success(response.body()!!)
-            } else {
-                val errorMsg = response.errorBody()?.string() ?: "Gagal mengambil data produksi"
-                Result.failure(Exception(errorMsg))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun getProduksi(token: String?): Result<List<ProduksiModel>> = request {
+        val response = SupabaseClient.produksiService.getProduksi(authHeader = authHeader(token))
+        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal mengambil data produksi")
+        response.body() ?: error("Respons data produksi kosong")
     }
 
-    suspend fun insertProduksi(token: String?, produksi: ProduksiModel): Result<ProduksiModel> {
-        return try {
-            val authHeader = if (!token.isNullOrEmpty()) "Bearer $token" else "Bearer ${SupabaseConfig.ANON_KEY}"
-            val response = SupabaseClient.produksiService.insertProduksi(
-                authHeader = authHeader,
-                produksi = produksi
-            )
-
-            if (response.isSuccessful && !response.body().isNullOrEmpty()) {
-                Result.success(response.body()!!.first())
-            } else {
-                val errorMsg = response.errorBody()?.string() ?: "Gagal menambah produksi"
-                Result.failure(Exception(errorMsg))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun insertProduksi(token: String?, produksi: ProduksiModel): Result<ProduksiModel> = request {
+        val response = SupabaseClient.produksiService.insertProduksi(
+            authHeader = authHeader(token),
+            produksi = produksi
+        )
+        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal menambah produksi")
+        response.body()?.firstOrNull() ?: error("Supabase tidak mengembalikan data produksi yang dibuat")
     }
 
-    suspend fun updateProduksi(token: String?, id: Long, produksi: ProduksiModel): Result<ProduksiModel> {
-        return try {
-            val authHeader = if (!token.isNullOrEmpty()) "Bearer $token" else "Bearer ${SupabaseConfig.ANON_KEY}"
-            val response = SupabaseClient.produksiService.updateProduksi(
-                authHeader = authHeader,
-                idFilter = "eq.$id",
-                produksi = produksi
-            )
-
-            if (response.isSuccessful && !response.body().isNullOrEmpty()) {
-                Result.success(response.body()!!.first())
-            } else {
-                val errorMsg = response.errorBody()?.string() ?: "Gagal memperbarui produksi"
-                Result.failure(Exception(errorMsg))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun updateProduksi(token: String?, id: Long, produksi: ProduksiModel): Result<ProduksiModel> = request {
+        val response = SupabaseClient.produksiService.updateProduksi(
+            authHeader = authHeader(token),
+            idFilter = "eq.$id",
+            produksi = produksi
+        )
+        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal memperbarui produksi")
+        response.body()?.firstOrNull() ?: error("Produksi $id tidak ditemukan saat diperbarui")
     }
 
-    suspend fun deleteProduksi(token: String?, id: Long): Result<Boolean> {
-        return try {
-            val authHeader = if (!token.isNullOrEmpty()) "Bearer $token" else "Bearer ${SupabaseConfig.ANON_KEY}"
-            val response = SupabaseClient.produksiService.deleteProduksi(
-                authHeader = authHeader,
-                idFilter = "eq.$id"
-            )
-
-            if (response.isSuccessful) {
-                Result.success(true)
-            } else {
-                val errorMsg = response.errorBody()?.string() ?: "Gagal menghapus produksi"
-                Result.failure(Exception(errorMsg))
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun deleteProduksi(token: String?, id: Long): Result<Boolean> = request {
+        val response = SupabaseClient.produksiService.deleteProduksi(
+            authHeader = authHeader(token),
+            idFilter = "eq.$id"
+        )
+        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal menghapus produksi")
+        true
     }
+
+    private fun authHeader(token: String?): String =
+        "Bearer " + (token?.takeIf { it.isNotBlank() } ?: SupabaseConfig.ANON_KEY)
+
+    private suspend fun <T> request(block: suspend () -> T): Result<T> =
+        withContext(Dispatchers.IO) {
+            try {
+                Result.success(block())
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                if (exception is java.io.InterruptedIOException ||
+                    (exception is java.io.IOException && exception.message?.contains("Canceled", ignoreCase = true) == true)
+                ) {
+                    throw CancellationException("Job was cancelled", exception)
+                }
+                Result.failure(exception)
+            }
+        }
 }

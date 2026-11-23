@@ -44,14 +44,12 @@ class KaryawanListAdapter(
         binding.tvNamaKaryawanSimple.text = item.nama
         binding.tvDivisiKaryawanSimple.text = "Divisi: ${item.divisi}"
 
-        val attendance = KaryawanRepository.absensiHariIni(context, item.nama)
-        val statusText = when {
-            attendance.jamPulang != null -> "Sudah Pulang"
-            attendance.jamMasuk != null -> "Hadir"
-            else -> "Belum Absen"
-        }
-        binding.tvStatusKaryawanSimple.text = statusText
-        binding.tvJamKaryawanSimple.text = "Masuk: ${attendance.jamMasuk ?: "—"}  •  Pulang: ${attendance.jamPulang ?: "—"}"
+        binding.tvStatusKaryawanSimple.text = item.statusKeaktifan ?: "Aktif"
+        binding.tvJamKaryawanSimple.text = listOfNotNull(
+            item.jabatan?.takeIf { it.isNotBlank() },
+            item.telepon?.takeIf { it.isNotBlank() },
+            item.alamat?.takeIf { it.isNotBlank() }
+        ).joinToString(" • ")
 
         binding.btnEditKaryawan.setOnClickListener {
             onEditClick(item)

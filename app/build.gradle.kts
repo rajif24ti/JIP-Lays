@@ -1,6 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+val localSupabaseConfig = Properties().apply {
+    val configFile = rootProject.file("local.properties")
+    if (configFile.exists()) configFile.inputStream().use { load(it) }
+}
+
+fun String.asBuildConfigString(): String =
+    "\"" + replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 
 android {
     namespace = "com.example.jip_lays"
@@ -29,8 +39,28 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            (localSupabaseConfig.getProperty("supabase_url")
+                ?: localSupabaseConfig.getProperty("supabase.url")
+                ?: "https://your-supabase-project.supabase.co")
+                .asBuildConfigString()
+        )
+        buildConfigField(
+            "String",
+            "SUPABASE_ANON_KEY",
+            (localSupabaseConfig.getProperty("sb_publishable_key")
+                ?: localSupabaseConfig.getProperty("supabase.anonKey")
+                ?: "your-supabase-anon-key")
+                .asBuildConfigString()
+        )
     }
 }
 
