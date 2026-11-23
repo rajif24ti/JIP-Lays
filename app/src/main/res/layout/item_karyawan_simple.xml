@@ -14,55 +14,91 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="14dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvNamaKaryawanSimple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Nama Karyawan"
+                    android:textColor="@color/primary_navy"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvDivisiKaryawanSimple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Divisi"
+                    android:textColor="@color/text_body"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvJamKaryawanSimple"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Masuk: — • Pulang: —"
+                    android:textColor="@color/primary_blue"
+                    android:textSize="11sp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvNamaKaryawanSimple"
-                android:layout_width="match_parent"
+                android:id="@+id/tvStatusKaryawanSimple"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_bold"
-                android:text="Nama Karyawan"
-                android:textColor="@color/primary_navy"
-                android:textSize="15sp" />
-
-            <TextView
-                android:id="@+id/tvDivisiKaryawanSimple"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text="Divisi"
-                android:textColor="@color/text_body"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tvJamKaryawanSimple"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Masuk: — • Pulang: —"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_soft_gradient"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="6dp"
+                android:text="Hadir"
                 android:textColor="@color/primary_blue"
-                android:textSize="11sp" />
+                android:textSize="11sp"
+                android:fontFamily="@font/montserrat_medium" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvStatusKaryawanSimple"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/bg_status_badge"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="6dp"
-            android:text="Hadir"
-            android:textColor="@color/primary_blue"
-            android:textSize="11sp"
-            android:fontFamily="@font/montserrat_medium" />
+            android:layout_marginTop="10dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditKaryawan"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginEnd="6dp"
+                android:text="Edit"
+                android:textSize="11sp"
+                app:cornerRadius="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnHapusKaryawan"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Hapus"
+                android:textColor="#D32F2F"
+                android:textSize="11sp"
+                app:cornerRadius="8dp"
+                app:strokeColor="#D32F2F" />
+        </LinearLayout>
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

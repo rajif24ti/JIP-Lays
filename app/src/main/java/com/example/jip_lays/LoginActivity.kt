@@ -1,4 +1,3 @@
-
 package com.example.jip_lays
 
 import android.content.Intent
@@ -7,11 +6,15 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.jip_lays.data.repository.AuthRepository
 import com.example.jip_lays.databinding.ActivityLoginBinding
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private val authRepository = AuthRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,11 +22,7 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // SharedPreferences untuk menyimpan status login
-        val sharedPref = getSharedPreferences(
-            "user_pref",
-            MODE_PRIVATE
-        )
+        val sharedPref = getSharedPreferences("user_pref", MODE_PRIVATE)
 
         // Pilihan role pengguna
         val roles = arrayOf(
@@ -32,123 +31,97 @@ class LoginActivity : AppCompatActivity() {
             "Penanggung Jawab Sekolah"
         )
 
-        val adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_dropdown_item_1line,
-            roles
-        )
-
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, roles)
         binding.actRole.setAdapter(adapter)
-        binding.actRole.setOnClickListener {
-            binding.actRole.showDropDown()
-        }
-        binding.actRole.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.actRole.showDropDown()
-        }
+        binding.actRole.setOnClickListener { binding.actRole.showDropDown() }
+        binding.actRole.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) binding.actRole.showDropDown() }
 
         binding.btnKeRegistrasi.setOnClickListener {
-            startActivity(
-                Intent(this, RegisterActivity::class.java)
-            )
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
         // Tombol Login
         binding.btnLogin.setOnClickListener {
-
-            val username = binding.etUsername.text.toString().trim()
+            val email = binding.etUsername.text.toString().trim()
             val password = binding.etPassword.text.toString().trim()
             val role = binding.actRole.text.toString().trim()
 
-            // Validasi username
-            if (username.isEmpty()) {
-                binding.etUsername.error = "Username harus diisi"
+            if (email.isEmpty()) {
+                binding.etUsername.error = "Email harus diisi"
                 binding.etUsername.requestFocus()
                 return@setOnClickListener
             }
 
-            // Validasi password
             if (password.isEmpty()) {
                 binding.etPassword.error = "Password harus diisi"
                 binding.etPassword.requestFocus()
                 return@setOnClickListener
             }
 
-            // Validasi role
             if (role.isEmpty()) {
-                Toast.makeText(
-                    this,
-                    "Silakan pilih role",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this, "Silakan pilih role", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val savedUsername =
-                sharedPref.getString("username", "")
+            // Supabase Auth Login
+            binding.btnLogin.isEnabled = false
+            binding.btnLogin.text = "Memuat..."
 
-            val savedPassword =
-                sharedPref.getString("password", "")
+            lifecycleScope.launch {
+                val result = authRepository.login(email, password)
 
-            val savedRole =
-                sharedPref.getString("role", "")
+                binding.btnLogin.isEnabled = true
+                binding.btnLogin.text = "Masuk"
 
-            val loginValid = username == password ||
-                    (
-                            username == savedUsername &&
-                                    password == savedPassword
-                            )
+                result.onSuccess { tokenResponse ->
+                    val userMeta = tokenResponse.user?.userMetadata
+                    val userRole = userMeta?.role ?: role
+                    val userName = userMeta?.nama ?: email.substringBefore("@")
 
-            if (loginValid) {
+                    sharedPref.edit()
+                        .putBoolean("isLogin", true)
+                        .putString("access_token", tokenResponse.accessToken)
+                        .putString("username", userName)
+                        .putString("email", email)
+                        .putString("role", userRole)
+                        .apply()
 
-                // Simpan status dan data sesi pengguna
-                sharedPref.edit()
-                    .putBoolean("isLogin", true)
-                    .putString("username", username)
-                    .putString(
-                        "role",
-                        if (
-                            username == savedUsername &&
-                            password == savedPassword &&
-                            !savedRole.isNullOrEmpty()
-                        ) {
-                            savedRole
-                        } else {
-                            role
+                    Toast.makeText(this@LoginActivity, "Login Supabase Berhasil", Toast.LENGTH_SHORT).show()
+
+                    val intent = Intent(this@LoginActivity, BaseActivity::class.java).apply {
+                        putExtra("username", userName)
+                        putExtra("role", userRole)
+                    }
+                    startActivity(intent)
+                    finish()
+
+                }.onFailure { exception ->
+                    // Fallback to local admin login if offline or demo
+                    val savedUsername = sharedPref.getString("username", "")
+                    val savedPassword = sharedPref.getString("password", "")
+
+                    if ((email == "admin" && password == "admin") || (email == savedUsername && password == savedPassword)) {
+                        sharedPref.edit()
+                            .putBoolean("isLogin", true)
+                            .putString("username", email)
+                            .putString("role", role)
+                            .apply()
+
+                        Toast.makeText(this@LoginActivity, "Login berhasil (Local)", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(this@LoginActivity, BaseActivity::class.java).apply {
+                            putExtra("username", email)
+                            putExtra("role", role)
                         }
-                    )
-                    .apply()
-
-                val roleLogin =
-                    sharedPref.getString("role", role) ?: role
-
-                Toast.makeText(
-                    this,
-                    "Login berhasil",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                // Arahkan ke BaseActivity yang memiliki Bottom Navigation
-                val intent = Intent(
-                    this,
-                    BaseActivity::class.java
-                )
-
-                intent.putExtra("username", username)
-                intent.putExtra("role", role)
-
-                startActivity(intent)
-                finish()
-
-            } else {
-
-                // Jika username dan password tidak sama
-                AlertDialog.Builder(this)
-                    .setTitle("Login Gagal")
-                    .setMessage(
-                        "Username dan password tidak sesuai. Silakan coba lagi."
-                    )
-                    .setPositiveButton("OK", null)
-                    .show()
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        AlertDialog.Builder(this@LoginActivity)
+                            .setTitle("Login Gagal")
+                            .setMessage("Gagal masuk ke Supabase: ${exception.localizedMessage ?: exception.message}")
+                            .setPositiveButton("OK", null)
+                            .show()
+                    }
+                }
             }
         }
     }

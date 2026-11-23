@@ -7,26 +7,51 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Daftar Karyawan"
-        android:textColor="@color/primary_navy"
-        android:textSize="17sp"
-        android:fontFamily="@font/montserrat_bold" />
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Cari karyawan dan saring daftar berdasarkan divisi."
-        android:textColor="@color/text_body"
-        android:textSize="13sp" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Daftar Karyawan"
+                android:textColor="@color/primary_navy"
+                android:textSize="17sp"
+                android:fontFamily="@font/montserrat_bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Data terintegrasi Supabase DB."
+                android:textColor="@color/text_body"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnTambahKaryawan"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:text="+ Tambah"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:fontFamily="@font/montserrat_medium"
+            app:backgroundTint="@color/primary_blue"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="12dp"
         app:boxBackgroundMode="outline"
         app:boxCornerRadiusTopStart="10dp"
         app:boxCornerRadiusTopEnd="10dp"
@@ -68,10 +93,18 @@
         android:id="@+id/tvJumlahKaryawan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="20 karyawan ditemukan"
+        android:layout_marginTop="12dp"
+        android:text="0 karyawan ditemukan"
         android:textColor="@color/text_body"
         android:textSize="12sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBarKaryawan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:visibility="gone" />
 
     <FrameLayout
         android:layout_width="match_parent"
