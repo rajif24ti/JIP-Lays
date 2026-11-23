@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.jip_lays.data.repository.ProduksiRemoteRepository
 import com.example.jip_lays.databinding.FragmentProduksiRingkasanBinding
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -20,6 +21,7 @@ class ProduksiRingkasanFragment : Fragment() {
     private var _binding: FragmentProduksiRingkasanBinding? = null
     private val binding get() = _binding!!
     private val repository = ProduksiRemoteRepository()
+    private var summaryJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,9 +48,11 @@ class ProduksiRingkasanFragment : Fragment() {
 
     private fun calculateAndDisplaySummary() {
         val currentBinding = _binding ?: return
+        if (summaryJob?.isActive == true) return
 
-        lifecycleScope.launch {
+        summaryJob = viewLifecycleOwner.lifecycleScope.launch {
             val result = repository.getProduksi(getToken())
+            if (_binding == null) return@launch
 
             result.onSuccess { list ->
                 val todaySdf = SimpleDateFormat("yyyy-MM-dd", Locale.US).apply {
@@ -96,6 +100,8 @@ class ProduksiRingkasanFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        summaryJob?.cancel()
+        summaryJob = null
         super.onDestroyView()
         _binding = null
     }

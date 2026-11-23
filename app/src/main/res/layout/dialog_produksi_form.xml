@@ -272,6 +272,22 @@
                 android:textSize="12sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:hintEnabled="false">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCatatanGizi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:hint="Catatan gizi (opsional)"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="2"
+                android:textSize="12sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Sekolah Penerima & Alokasi Porsi -->
         <TextView
             android:layout_width="wrap_content"

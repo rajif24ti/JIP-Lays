@@ -81,6 +81,11 @@ class LoginActivity : AppCompatActivity() {
                     sharedPref.edit()
                         .putBoolean("isLogin", true)
                         .putString("access_token", tokenResponse.accessToken)
+                        .putString("refresh_token", tokenResponse.refreshToken)
+                        .putLong(
+                            "access_token_expires_at",
+                            System.currentTimeMillis() + tokenResponse.expiresIn * 1_000L
+                        )
                         .putString("username", userName)
                         .putString("email", email)
                         .putString("role", userRole)
@@ -103,6 +108,9 @@ class LoginActivity : AppCompatActivity() {
                     if ((email == "admin" && password == "admin") || (email == savedUsername && password == savedPassword)) {
                         sharedPref.edit()
                             .putBoolean("isLogin", true)
+                            .remove("access_token")
+                            .remove("refresh_token")
+                            .remove("access_token_expires_at")
                             .putString("username", email)
                             .putString("role", role)
                             .apply()

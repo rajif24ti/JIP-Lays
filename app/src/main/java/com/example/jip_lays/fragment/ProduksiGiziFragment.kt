@@ -13,6 +13,7 @@ import com.example.jip_lays.R
 import com.example.jip_lays.data.model.ProduksiModel
 import com.example.jip_lays.data.repository.ProduksiRemoteRepository
 import com.example.jip_lays.databinding.FragmentProduksiGiziBinding
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ProduksiGiziFragment : Fragment() {
@@ -21,6 +22,7 @@ class ProduksiGiziFragment : Fragment() {
     private val binding get() = _binding!!
     private val repository = ProduksiRemoteRepository()
     private var productionList = mutableListOf<ProduksiModel>()
+    private var loadJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,9 +50,11 @@ class ProduksiGiziFragment : Fragment() {
 
     private fun loadMenuGiziFromSupabase() {
         val currentBinding = _binding ?: return
+        if (loadJob?.isActive == true) return
 
-        lifecycleScope.launch {
+        loadJob = viewLifecycleOwner.lifecycleScope.launch {
             val result = repository.getProduksi(getToken())
+            if (_binding == null) return@launch
 
             result.onSuccess { data ->
                 productionList.clear()
@@ -102,6 +106,7 @@ class ProduksiGiziFragment : Fragment() {
         currentBinding.tvGiziSerat.text = "Serat:\n${gizi?.serat?.let { "$it g" } ?: "—"}"
         currentBinding.tvGiziKalsium.text = "Kalsium:\n${gizi?.kalsium?.let { "$it mg" } ?: "—"}"
         currentBinding.tvGiziZatBesi.text = "Zat Besi: ${gizi?.zatBesi?.let { "$it mg" } ?: "—"}"
+        currentBinding.tvGiziCatatan.text = "Catatan: ${gizi?.catatan?.takeIf { it.isNotBlank() } ?: "—"}"
 
         if (!item.gambarUrl.isNullOrEmpty()) {
             Glide.with(requireContext())
@@ -115,6 +120,8 @@ class ProduksiGiziFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        loadJob?.cancel()
+        loadJob = null
         super.onDestroyView()
         _binding = null
     }

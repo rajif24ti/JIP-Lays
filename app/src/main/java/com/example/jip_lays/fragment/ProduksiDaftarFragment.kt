@@ -28,6 +28,7 @@ import com.example.jip_lays.databinding.FragmentProduksiDaftarBinding
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -44,6 +45,7 @@ class ProduksiDaftarFragment : Fragment() {
     private var searchQuery = ""
     private var selectedStatus = "Semua Status"
     private var activeForm: ProductionForm? = null
+    private var productionLoadJob: Job? = null
 
     private val statusOptions = listOf("Direncanakan", "Dalam Proses", "Selesai", "Didistribusikan")
     private val schools = listOf(
@@ -117,19 +119,29 @@ class ProduksiDaftarFragment : Fragment() {
         requireContext().getSharedPreferences("user_pref", Context.MODE_PRIVATE)
             .getString("access_token", null)
 
+    private var lastErrorMessage: String? = null
+
     private fun loadProductions() {
         val binding = _binding ?: return
+        if (productionLoadJob?.isActive == true) return
         binding.progressBarProduksi.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            val result = repository.getProduksi(accessToken())
-            _binding?.progressBarProduksi?.visibility = View.GONE
-            result.onSuccess {
-                productionList.clear()
-                productionList.addAll(it)
-                renderProductionList()
-            }.onFailure {
-                showMessage("Gagal memuat produksi: ${it.localizedMessage ?: it.message}")
-                renderProductionList()
+        productionLoadJob = viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val result = repository.getProduksi(accessToken())
+                if (_binding == null) return@launch
+                result.onSuccess {
+                    lastErrorMessage = null
+                    productionList.clear()
+                    productionList.addAll(it)
+                    renderProductionList()
+                }.onFailure { error ->
+                    val msg = error.localizedMessage ?: error.message ?: "Gagal terhubung ke Supabase"
+                    lastErrorMessage = msg
+                    showMessage(msg)
+                    renderProductionList()
+                }
+            } finally {
+                _binding?.progressBarProduksi?.visibility = View.GONE
             }
         }
     }
@@ -147,10 +159,17 @@ class ProduksiDaftarFragment : Fragment() {
         }
         if (filtered.isEmpty()) {
             binding.containerProduksi.addView(TextView(requireContext()).apply {
-                text = if (productionList.isEmpty()) "Belum ada data produksi." else "Tidak ada data produksi yang cocok."
+                text = when {
+                    lastErrorMessage != null -> "${lastErrorMessage}\n\nKetuk di sini untuk mencoba lagi."
+                    productionList.isEmpty() -> "Belum ada data produksi."
+                    else -> "Tidak ada data produksi yang cocok."
+                }
                 textSize = 13f
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.text_body))
                 setPadding(0, 16, 0, 16)
+                if (lastErrorMessage != null) {
+                    setOnClickListener { loadProductions() }
+                }
             })
             return
         }
@@ -267,6 +286,7 @@ class ProduksiDaftarFragment : Fragment() {
             formBinding.etSerat.setText(nutrition?.serat?.toString().orEmpty())
             formBinding.etKalsium.setText(nutrition?.kalsium?.toString().orEmpty())
             formBinding.etZatBesi.setText(nutrition?.zatBesi?.toString().orEmpty())
+            formBinding.etCatatanGizi.setText(nutrition?.catatan.orEmpty())
             val allocations = item.sekolahTujuan.orEmpty().associate { it.sekolah to it.porsi }
             formBinding.etPorsiSdn001.setText(allocations[schools[0]]?.toString().orEmpty())
             formBinding.etPorsiSdn002.setText(allocations[schools[1]]?.toString().orEmpty())
@@ -332,7 +352,7 @@ class ProduksiDaftarFragment : Fragment() {
             runCatching { LocalDate.parse(tanggal) }.isFailure ||
             status !in statusOptions ||
             nutritionValues.any { it == null || !it.isFinite() || it < 0 } ||
-            allocationValues.any { it < 0 } || allocatedTotal > (porsi ?: 0).toLong() ||
+            allocationValues.any { it < 0 } || allocatedTotal > porsi.toLong() ||
             allocationValues.none { it > 0 }
         ) {
             showMessage("Periksa data: menu, tanggal, status, gizi, dan alokasi sekolah harus valid. Total alokasi tidak boleh melebihi porsi produksi.")
@@ -357,7 +377,8 @@ class ProduksiDaftarFragment : Fragment() {
                 lemak = values[3],
                 serat = values[4],
                 kalsium = values[5],
-                zatBesi = values[6]
+                zatBesi = values[6],
+                catatan = b.etCatatanGizi.text?.toString()?.trim()?.takeIf { it.isNotEmpty() }
             ),
             sekolahTujuan = allocations
         )
@@ -366,7 +387,7 @@ class ProduksiDaftarFragment : Fragment() {
         form.dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).isEnabled = false
         form.dialog.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).isEnabled = false
         _binding?.progressBarProduksi?.visibility = View.VISIBLE
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             var uploadedImageUrl: String? = null
             val uploaded = form.selectedImageUri?.let { uri ->
                 storageRepository.uploadMenuImage(requireContext(), accessToken(), uri)
@@ -451,7 +472,7 @@ class ProduksiDaftarFragment : Fragment() {
     private fun deleteProduction(item: ProduksiModel) {
         val id = item.id ?: return
         _binding?.progressBarProduksi?.visibility = View.VISIBLE
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             repository.deleteProduksi(accessToken(), id)
                 .onSuccess {
                     loadProductions()
@@ -489,6 +510,8 @@ class ProduksiDaftarFragment : Fragment() {
     override fun onDestroyView() {
         activeForm?.dialog?.dismiss()
         activeForm = null
+        productionLoadJob?.cancel()
+        productionLoadJob = null
         _binding = null
         super.onDestroyView()
     }

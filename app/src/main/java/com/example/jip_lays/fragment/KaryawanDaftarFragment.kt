@@ -17,6 +17,7 @@ import com.example.jip_lays.data.repository.KaryawanRemoteRepository
 import com.example.jip_lays.databinding.DialogKaryawanFormBinding
 import com.example.jip_lays.databinding.FragmentKaryawanDaftarBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class KaryawanDaftarFragment : Fragment() {
@@ -29,6 +30,7 @@ class KaryawanDaftarFragment : Fragment() {
     private var searchQuery = ""
     private var selectedDivisi = "Semua Divisi"
     private var listAdapter: KaryawanListAdapter? = null
+    private var loadJob: Job? = null
 
     private val daftarDivisi = listOf(
         "Divisi Produksi",
@@ -75,7 +77,9 @@ class KaryawanDaftarFragment : Fragment() {
         }
 
         binding.listKaryawan.emptyView = binding.tvKaryawanKosong
-
+        binding.tvKaryawanKosong.setOnClickListener {
+            loadDataFromSupabase()
+        }
     }
 
     override fun onResume() {
@@ -90,19 +94,26 @@ class KaryawanDaftarFragment : Fragment() {
 
     private fun loadDataFromSupabase() {
         val currentBinding = _binding ?: return
+        if (loadJob?.isActive == true) return
         currentBinding.progressBarKaryawan.visibility = View.VISIBLE
 
-        lifecycleScope.launch {
-            val result = repository.getKaryawan(getToken())
-            currentBinding.progressBarKaryawan.visibility = View.GONE
-
-            result.onSuccess { data ->
-                masterKaryawanList.clear()
-                masterKaryawanList.addAll(data)
-                filterAndDisplayList()
-            }.onFailure { exception ->
-                Toast.makeText(requireContext(), "Gagal memuat Supabase: ${exception.localizedMessage ?: exception.message}", Toast.LENGTH_SHORT).show()
-                filterAndDisplayList()
+        loadJob = viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val result = repository.getKaryawan(getToken())
+                if (_binding == null) return@launch
+                result.onSuccess { data ->
+                    masterKaryawanList.clear()
+                    masterKaryawanList.addAll(data)
+                    currentBinding.tvKaryawanKosong.text = "Tidak ada karyawan yang cocok."
+                    filterAndDisplayList()
+                }.onFailure { exception ->
+                    val errMsg = exception.localizedMessage ?: exception.message ?: "Gagal terhubung ke Supabase"
+                    currentBinding.tvKaryawanKosong.text = "$errMsg\n\nKetuk di sini untuk mencoba lagi."
+                    Toast.makeText(requireContext(), errMsg, Toast.LENGTH_LONG).show()
+                    filterAndDisplayList()
+                }
+            } finally {
+                _binding?.progressBarKaryawan?.visibility = View.GONE
             }
         }
     }
@@ -188,7 +199,7 @@ class KaryawanDaftarFragment : Fragment() {
         val currentBinding = _binding ?: return
         currentBinding.progressBarKaryawan.visibility = View.VISIBLE
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val result = repository.insertKaryawan(getToken(), karyawan)
             currentBinding.progressBarKaryawan.visibility = View.GONE
 
@@ -267,7 +278,7 @@ class KaryawanDaftarFragment : Fragment() {
         val currentBinding = _binding ?: return
         currentBinding.progressBarKaryawan.visibility = View.VISIBLE
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val result = repository.updateKaryawan(getToken(), id, karyawan)
             currentBinding.progressBarKaryawan.visibility = View.GONE
 
@@ -297,7 +308,7 @@ class KaryawanDaftarFragment : Fragment() {
         val currentBinding = _binding ?: return
         currentBinding.progressBarKaryawan.visibility = View.VISIBLE
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val result = repository.deleteKaryawan(getToken(), id)
             currentBinding.progressBarKaryawan.visibility = View.GONE
 
@@ -311,6 +322,8 @@ class KaryawanDaftarFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        loadJob?.cancel()
+        loadJob = null
         super.onDestroyView()
         listAdapter = null
         _binding = null

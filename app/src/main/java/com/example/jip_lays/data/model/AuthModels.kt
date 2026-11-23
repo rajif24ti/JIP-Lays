@@ -32,6 +32,10 @@ data class TokenRequest(
     @SerializedName("password") val password: String
 )
 
+data class RefreshTokenRequest(
+    @SerializedName("refresh_token") val refreshToken: String
+)
+
 data class TokenResponse(
     @SerializedName("access_token") val accessToken: String,
     @SerializedName("token_type") val tokenType: String,

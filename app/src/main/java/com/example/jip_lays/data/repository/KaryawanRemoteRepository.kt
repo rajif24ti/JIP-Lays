@@ -3,6 +3,8 @@ package com.example.jip_lays.data.repository
 import com.example.jip_lays.data.model.KaryawanModel
 import com.example.jip_lays.data.network.SupabaseClient
 import com.example.jip_lays.data.network.SupabaseConfig
+import com.example.jip_lays.data.network.SupabaseErrorHandler
+import com.example.jip_lays.data.network.SupabaseSession
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -11,7 +13,9 @@ class KaryawanRemoteRepository {
 
     suspend fun getKaryawan(token: String?): Result<List<KaryawanModel>> = request {
         val response = SupabaseClient.karyawanService.getKaryawan(authHeader = authHeader(token))
-        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal mengambil data karyawan")
+        if (!response.isSuccessful) {
+            SupabaseErrorHandler.handleUnsuccessfulResponse("GET /rest/v1/karyawan", response)
+        }
         response.body() ?: error("Respons data karyawan kosong")
     }
 
@@ -20,7 +24,9 @@ class KaryawanRemoteRepository {
             authHeader = authHeader(token),
             karyawan = karyawan
         )
-        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal menambah karyawan")
+        if (!response.isSuccessful) {
+            SupabaseErrorHandler.handleUnsuccessfulResponse("POST /rest/v1/karyawan", response)
+        }
         response.body()?.firstOrNull() ?: error("Supabase tidak mengembalikan data karyawan yang dibuat")
     }
 
@@ -30,7 +36,9 @@ class KaryawanRemoteRepository {
             idFilter = "eq.$id",
             karyawan = karyawan
         )
-        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal memperbarui karyawan")
+        if (!response.isSuccessful) {
+            SupabaseErrorHandler.handleUnsuccessfulResponse("PATCH /rest/v1/karyawan", response)
+        }
         response.body()?.firstOrNull() ?: error("Karyawan $id tidak ditemukan saat diperbarui")
     }
 
@@ -39,12 +47,16 @@ class KaryawanRemoteRepository {
             authHeader = authHeader(token),
             idFilter = "eq.$id"
         )
-        if (!response.isSuccessful) error(response.errorBody()?.string() ?: "Gagal menghapus karyawan")
+        if (!response.isSuccessful) {
+            SupabaseErrorHandler.handleUnsuccessfulResponse("DELETE /rest/v1/karyawan", response)
+        }
         true
     }
 
-    private fun authHeader(token: String?): String =
-        "Bearer " + (token?.takeIf { it.isNotBlank() } ?: SupabaseConfig.ANON_KEY)
+    private suspend fun authHeader(token: String?): String {
+        val validToken = SupabaseSession.validAccessToken(token)
+        return "Bearer " + (validToken?.takeIf { it.isNotBlank() } ?: SupabaseConfig.ANON_KEY)
+    }
 
     private suspend fun <T> request(block: suspend () -> T): Result<T> =
         withContext(Dispatchers.IO) {
@@ -53,12 +65,7 @@ class KaryawanRemoteRepository {
             } catch (exception: CancellationException) {
                 throw exception
             } catch (exception: Exception) {
-                if (exception is java.io.InterruptedIOException ||
-                    (exception is java.io.IOException && exception.message?.contains("Canceled", ignoreCase = true) == true)
-                ) {
-                    throw CancellationException("Job was cancelled", exception)
-                }
-                Result.failure(exception)
+                Result.failure(SupabaseErrorHandler.formatThrowable(exception))
             }
         }
 }

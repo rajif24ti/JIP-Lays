@@ -9,8 +9,10 @@ object SupabaseConfig {
     var BASE_URL: String = normalizeUrl(BuildConfig.SUPABASE_URL)
     var ANON_KEY: String = BuildConfig.SUPABASE_ANON_KEY
     const val SCHEMA = "mobile"
+    private var appContext: Context? = null
 
     fun init(context: Context) {
+        appContext = context.applicationContext
         val prefs = context.getSharedPreferences("supabase_config", Context.MODE_PRIVATE)
         val customUrl = prefs.getString("supabase_url", null)
         val customKey = prefs.getString("supabase_key", null)
@@ -24,6 +26,7 @@ object SupabaseConfig {
     }
 
     fun saveConfig(context: Context, url: String, key: String) {
+        appContext = context.applicationContext
         val cleanUrl = normalizeUrl(url)
         BASE_URL = cleanUrl
         ANON_KEY = key
@@ -33,6 +36,8 @@ object SupabaseConfig {
             .putString("supabase_key", key)
             .apply()
     }
+
+    internal fun applicationContext(): Context? = appContext
 
     private fun normalizeUrl(url: String): String {
         var cleanUrl = url.trim()

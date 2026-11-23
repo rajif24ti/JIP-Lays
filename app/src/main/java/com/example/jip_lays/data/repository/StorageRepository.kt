@@ -4,13 +4,18 @@ import android.content.Context
 import android.net.Uri
 import com.example.jip_lays.data.network.SupabaseClient
 import com.example.jip_lays.data.network.SupabaseConfig
+import com.example.jip_lays.data.network.SupabaseErrorHandler
+import com.example.jip_lays.data.network.SupabaseSession
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.util.UUID
 
 class StorageRepository {
 
-    suspend fun uploadMenuImage(context: Context, token: String?, imageUri: Uri): Result<String> = runCatching {
+    suspend fun uploadMenuImage(context: Context, token: String?, imageUri: Uri): Result<String> = request {
         val mimeType = context.contentResolver.getType(imageUri) ?: "image/jpeg"
         require(mimeType.startsWith("image/")) { "Berkas yang dipilih bukan gambar" }
         val bytes = context.contentResolver.openInputStream(imageUri)?.use { it.readBytes() }
@@ -28,12 +33,12 @@ class StorageRepository {
             fileBytes = bytes.toRequestBody(mimeType.toMediaType())
         )
         if (!response.isSuccessful) {
-            error(response.errorBody()?.string() ?: "Gagal mengunggah gambar ke Storage")
+            SupabaseErrorHandler.handleUnsuccessfulResponse("POST /storage/v1/object/menu-produksi", response)
         }
         "${SupabaseConfig.BASE_URL}storage/v1/object/public/menu-produksi/$fileName"
     }
 
-    suspend fun deleteMenuImage(token: String?, imageUrl: String): Result<Unit> = runCatching {
+    suspend fun deleteMenuImage(token: String?, imageUrl: String): Result<Unit> = request {
         val fileName = imageUrl.substringBefore('?').substringAfterLast("/menu-produksi/")
         require(fileName.isNotBlank() && fileName != imageUrl) { "Path gambar Storage tidak valid" }
         val response = SupabaseClient.storageService.deleteImage(
@@ -41,10 +46,23 @@ class StorageRepository {
             path = fileName
         )
         if (!response.isSuccessful) {
-            error(response.errorBody()?.string() ?: "Gagal menghapus gambar dari Storage")
+            SupabaseErrorHandler.handleUnsuccessfulResponse("DELETE /storage/v1/object/menu-produksi", response)
         }
     }
 
-    private fun authHeader(token: String?): String =
-        "Bearer ${token?.takeIf { it.isNotBlank() } ?: SupabaseConfig.ANON_KEY}"
+    private suspend fun authHeader(token: String?): String {
+        val validToken = SupabaseSession.validAccessToken(token)
+        return "Bearer " + (validToken?.takeIf { it.isNotBlank() } ?: SupabaseConfig.ANON_KEY)
+    }
+
+    private suspend fun <T> request(block: suspend () -> T): Result<T> =
+        withContext(Dispatchers.IO) {
+            try {
+                Result.success(block())
+            } catch (exception: CancellationException) {
+                throw exception
+            } catch (exception: Exception) {
+                Result.failure(SupabaseErrorHandler.formatThrowable(exception))
+            }
+        }
 }

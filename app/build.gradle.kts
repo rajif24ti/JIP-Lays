@@ -50,7 +50,7 @@ android {
             "SUPABASE_URL",
             (localSupabaseConfig.getProperty("supabase_url")
                 ?: localSupabaseConfig.getProperty("supabase.url")
-                ?: "https://your-supabase-project.supabase.co")
+                ?: "https://rhdtrcvyczjaummbglle.supabase.co")
                 .asBuildConfigString()
         )
         buildConfigField(
@@ -58,7 +58,7 @@ android {
             "SUPABASE_ANON_KEY",
             (localSupabaseConfig.getProperty("sb_publishable_key")
                 ?: localSupabaseConfig.getProperty("supabase.anonKey")
-                ?: "your-supabase-anon-key")
+                ?: "sb_publishable_hVqtK5XVdUxQzBSzmAlkdw_FWI1u6v5")
                 .asBuildConfigString()
         )
     }

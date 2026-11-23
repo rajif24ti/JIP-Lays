@@ -201,25 +201,28 @@
             android:textSize="9sp" />
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:id="@+id/tilRole"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            app:boxBackgroundColor="@color/white"
             app:boxCornerRadiusBottomEnd="7dp"
             app:boxCornerRadiusBottomStart="7dp"
             app:boxCornerRadiusTopEnd="7dp"
             app:boxCornerRadiusTopStart="7dp"
-            app:boxStrokeWidth="0dp">
+            app:hintEnabled="false">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRole"
+            <AutoCompleteTextView
+                android:id="@+id/actRole"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="48dp"
                 android:fontFamily="@font/inter_18pt_regular"
-                android:hint="Masukkan role"
-                android:inputType="textCapWords"
-                android:paddingStart="13dp"
+                android:hint="Pilih Role Pengguna"
+                android:inputType="none"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="Penanggung Jawab Dapur"
+                android:textColor="@color/text_body"
                 android:textSize="12sp" />
 
         </com.google.android.material.textfield.TextInputLayout>

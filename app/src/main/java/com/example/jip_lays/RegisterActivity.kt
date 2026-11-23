@@ -3,6 +3,7 @@ package com.example.jip_lays
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -22,12 +23,24 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Pilihan role pengguna (Dropdown sama seperti Login)
+        val roles = arrayOf(
+            "Penanggung Jawab Dapur",
+            "Ahli Gizi",
+            "Penanggung Jawab Sekolah"
+        )
+
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, roles)
+        binding.actRole.setAdapter(adapter)
+        binding.actRole.setOnClickListener { binding.actRole.showDropDown() }
+        binding.actRole.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) binding.actRole.showDropDown() }
+
         binding.btnRegister.setOnClickListener {
             val nama = binding.etNama.text.toString().trim()
             val handphone = binding.etHandphone.text.toString().trim()
-            val email = binding.etUsername.text.toString().trim()
-            val password = binding.etPassword.text.toString()
-            val role = binding.etRole.text.toString().trim()
+            val email = binding.etUsername.text.toString().trim().lowercase()
+            val password = binding.etPassword.text.toString().trim()
+            val role = binding.actRole.text.toString().trim()
 
             // Validasi semua input
             if (nama.isEmpty() || handphone.isEmpty() || email.isEmpty() || password.isEmpty() || role.isEmpty()) {
@@ -56,15 +69,8 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             // Validasi role
-            val rolesValid = listOf(
-                "Penanggung Jawab Dapur",
-                "Ahli Gizi",
-                "Penanggung Jawab Sekolah"
-            )
-
-            if (role !in rolesValid) {
-                binding.etRole.error = "Masukkan salah satu role yang tersedia"
-                binding.etRole.requestFocus()
+            if (role !in roles) {
+                Toast.makeText(this, "Silakan pilih salah satu role dari dropdown", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
